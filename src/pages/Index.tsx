@@ -1,108 +1,224 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import { useAuth } from "@/hooks/useAuth";
 import SearchSection from "@/components/SearchSection";
 import ActivityCard from "@/components/ActivityCard";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
+
+interface Initiative {
+  id: string;
+  title: string;
+  description: string;
+  nai_benefits?: string;
+  location: string;
+  date: string;
+  participants: string;
+  contact: string;
+  type: "l2" | "cultura" | "social" | "sport";
+  organization: string;
+  latitude?: number;
+  longitude?: number;
+  created_by: string;
+  is_generated: boolean;
+  source_url?: string;
+}
 
 const Index = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const [initiatives, setInitiatives] = useState<Initiative[]>([]);
+  const [filteredInitiatives, setFilteredInitiatives] = useState<Initiative[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedType, setSelectedType] = useState<string>("all");
+  const [selectedLocation, setSelectedLocation] = useState<string>("all");
 
-  // Removed auto-redirect to allow users to access search functionality
-  const mockActivities = [
-    {
-      title: "Corso di Italiano L2 - Livello A1",
-      description: "Corso base di lingua italiana per studenti stranieri. Lezioni interattive con supporto multimediale e attività pratiche.",
-      location: "Via XXV Aprile, 12 - Sampierdarena",
-      date: "Lun-Mer-Ven 14:00-16:00",
-      participants: "Max 15 studenti",
-      contact: "Tel: 010-1234567",
-      type: "l2" as const,
-      organization: "Centro Interculturale",
-      isSaved: false
-    },
-    {
-      title: "Laboratorio di Teatro Interculturale",
-      description: "Attività teatrale per favorire l'integrazione e l'espressione creativa degli studenti NAI attraverso la drammatizzazione.",
-      location: "Teatro della Gioventù - Centro Storico",
-      date: "Martedì 16:30-18:30",
-      participants: "8-20 anni",
-      contact: "info@teatrogiovani.it",
-      type: "cultura" as const,
-      organization: "Teatro della Gioventù",
-      isSaved: true
-    },
-    {
-      title: "Supporto Scolastico e Orientamento",
-      description: "Servizio di supporto per l'inserimento scolastico di studenti stranieri con consulenza psicopedagogica.",
-      location: "Via del Campo, 91 - Centro Ovest",
-      date: "Lun-Ven 9:00-17:00",
-      participants: "Famiglie e studenti",
-      contact: "Tel: 010-5577123",
-      type: "social" as const,
-      organization: "Servizi Sociali",
-      isSaved: false
-    },
-    {
-      title: "Calcio Interculturale Under 16",
-      description: "Squadra di calcio mista per promuovere l'integrazione attraverso lo sport. Allenamenti bisettimanali.",
-      location: "Campo Sportivo Canevari - Sampierdarena",
-      date: "Mar-Gio 17:00-19:00",
-      participants: "12-16 anni",
-      contact: "mister@calciointegrazione.it",
-      type: "sport" as const,
-      organization: "ASD Genova United",
-      isSaved: false
+  useEffect(() => {
+    fetchInitiatives();
+  }, []);
+
+  useEffect(() => {
+    filterInitiatives();
+  }, [initiatives, searchTerm, selectedType, selectedLocation]);
+
+  const fetchInitiatives = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('initiatives')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      
+      const mappedData = (data || []).map(item => ({
+        ...item,
+        type: item.type as "l2" | "cultura" | "social" | "sport"
+      }));
+      
+      setInitiatives(mappedData);
+    } catch (error) {
+      console.error('Error fetching initiatives:', error);
+      toast({
+        title: "Errore",
+        description: "Errore nel caricamento delle iniziative",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  const filterInitiatives = () => {
+    let filtered = initiatives;
+
+    // Filter by search term
+    if (searchTerm.trim()) {
+      const term = searchTerm.toLowerCase();
+      filtered = filtered.filter(initiative =>
+        initiative.title.toLowerCase().includes(term) ||
+        initiative.description.toLowerCase().includes(term) ||
+        initiative.organization.toLowerCase().includes(term) ||
+        initiative.location.toLowerCase().includes(term) ||
+        (initiative.nai_benefits && initiative.nai_benefits.toLowerCase().includes(term))
+      );
+    }
+
+    // Filter by type
+    if (selectedType !== "all") {
+      filtered = filtered.filter(initiative => initiative.type === selectedType);
+    }
+
+    // Filter by location (simple implementation)
+    if (selectedLocation !== "all") {
+      filtered = filtered.filter(initiative => 
+        initiative.location.toLowerCase().includes(selectedLocation.toLowerCase())
+      );
+    }
+
+    setFilteredInitiatives(filtered);
+  };
+
+  const handleSearch = (term: string, type: string, location: string) => {
+    setSearchTerm(term);
+    setSelectedType(type);
+    setSelectedLocation(location);
+  };
+
+  const handleActivityClick = (initiative: Initiative) => {
+    // Could implement a detail view or redirect to activity page
+    if (user) {
+      navigate('/attivita');
+    } else {
+      navigate('/auth');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <SearchSection />
+        <SearchSection onSearch={handleSearch} />
         
         {/* Results Section */}
         <div className="mt-8">
           <div className="flex justify-between items-center mb-6">
             <div>
               <h2 className="text-xl font-semibold text-foreground">
-                Iniziative disponibili
+                {searchTerm ? `Risultati per "${searchTerm}"` : "Tutte le iniziative"}
               </h2>
               <p className="text-sm text-muted-foreground">
-                {mockActivities.length} risultati trovati nella tua zona
+                {loading ? "Caricamento..." : `${filteredInitiatives.length} risultati trovati`}
               </p>
             </div>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockActivities.map((activity, index) => (
-              <ActivityCard key={index} {...activity} />
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </div>
+          ) : filteredInitiatives.length > 0 ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredInitiatives.map((initiative) => (
+                <ActivityCard 
+                  key={initiative.id}
+                  id={initiative.id}
+                  title={initiative.title}
+                  description={initiative.description}
+                  nai_benefits={initiative.nai_benefits}
+                  location={initiative.location}
+                  date={initiative.date}
+                  participants={initiative.participants}
+                  contact={initiative.contact}
+                  type={initiative.type}
+                  organization={initiative.organization}
+                  latitude={initiative.latitude}
+                  longitude={initiative.longitude}
+                  created_by={initiative.created_by}
+                  is_generated={initiative.is_generated}
+                  source_url={initiative.source_url}
+                  onTitleClick={() => handleActivityClick(initiative)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <div className="max-w-md mx-auto">
+                <h3 className="text-lg font-semibold text-foreground mb-2">
+                  {searchTerm ? "Nessun risultato trovato" : "Nessuna iniziativa disponibile"}
+                </h3>
+                <p className="text-muted-foreground mb-4">
+                  {searchTerm 
+                    ? "Prova a modificare i criteri di ricerca" 
+                    : "Al momento non ci sono iniziative pubblicate"}
+                </p>
+                {user && (
+                  <button 
+                    onClick={() => navigate('/supporto')}
+                    className="text-primary hover:underline"
+                  >
+                    Crea una nuova iniziativa
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Quick Stats */}
-        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center p-4 bg-primary-light rounded-lg">
-            <div className="text-2xl font-bold text-primary">24</div>
-            <div className="text-sm text-muted-foreground">Corsi L2 attivi</div>
+        {/* Quick Stats - Real Data */}
+        {!loading && initiatives.length > 0 && (
+          <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="text-center p-4 bg-primary/10 rounded-lg">
+              <div className="text-2xl font-bold text-primary">
+                {initiatives.filter(i => i.type === 'l2').length}
+              </div>
+              <div className="text-sm text-muted-foreground">Corsi L2</div>
+            </div>
+            <div className="text-center p-4 bg-secondary/10 rounded-lg">
+              <div className="text-2xl font-bold text-secondary">
+                {initiatives.filter(i => i.type === 'cultura').length}
+              </div>
+              <div className="text-sm text-muted-foreground">Attività culturali</div>
+            </div>
+            <div className="text-center p-4 bg-accent/10 rounded-lg">
+              <div className="text-2xl font-bold text-accent">
+                {initiatives.filter(i => i.type === 'social').length}
+              </div>
+              <div className="text-sm text-muted-foreground">Servizi sociali</div>
+            </div>
+            <div className="text-center p-4 bg-success/10 rounded-lg">
+              <div className="text-2xl font-bold text-success">
+                {initiatives.filter(i => i.type === 'sport').length}
+              </div>
+              <div className="text-sm text-muted-foreground">Attività sportive</div>
+            </div>
           </div>
-          <div className="text-center p-4 bg-secondary-light rounded-lg">
-            <div className="text-2xl font-bold text-secondary">16</div>
-            <div className="text-sm text-muted-foreground">Attività culturali</div>
-          </div>
-          <div className="text-center p-4 bg-accent-light rounded-lg">
-            <div className="text-2xl font-bold text-accent">8</div>
-            <div className="text-sm text-muted-foreground">Servizi sociali</div>
-          </div>
-          <div className="text-center p-4 bg-success-light rounded-lg">
-            <div className="text-2xl font-bold text-success">12</div>
-            <div className="text-sm text-muted-foreground">Attività sportive</div>
-          </div>
-        </div>
+        )}
       </main>
     </div>
   );
