@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Loader2, Sparkles, FileText, Save } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { Badge } from "@/components/ui/badge";
 import ActivityCard from "./ActivityCard";
 
 interface GeneratedCard {
@@ -30,6 +31,8 @@ const ContentCardGenerator = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [useUrl, setUseUrl] = useState(false);
   const [generatedCard, setGeneratedCard] = useState<GeneratedCard | null>(null);
+  const [editableCard, setEditableCard] = useState<GeneratedCard | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
 
@@ -67,9 +70,11 @@ const ContentCardGenerator = () => {
       if (error) throw error;
 
       setGeneratedCard(data.contentCard);
+      setEditableCard({ ...data.contentCard });
+      setIsEditing(true);
       toast({
         title: "Scheda generata!",
-        description: "La scheda dell'attività è stata creata con successo",
+        description: "Puoi modificare i campi prima di salvare",
       });
     } catch (error) {
       console.error('Error generating content card:', error);
@@ -90,11 +95,19 @@ const ContentCardGenerator = () => {
     setTargetAge("");
     setLocation("");
     setGeneratedCard(null);
+    setEditableCard(null);
+    setIsEditing(false);
     setUseUrl(false);
   };
 
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditableCard(null);
+    setGeneratedCard(null);
+  };
+
   const handleSaveInitiative = async () => {
-    if (!generatedCard) return;
+    if (!editableCard) return;
 
     setIsSaving(true);
     try {
@@ -112,14 +125,14 @@ const ContentCardGenerator = () => {
       const { error } = await supabase
         .from('initiatives')
         .insert({
-          title: generatedCard.title,
-          description: generatedCard.description,
-          location: generatedCard.location,
-          date: generatedCard.date,
-          participants: generatedCard.participants,
-          contact: generatedCard.contact,
-          type: generatedCard.type,
-          organization: generatedCard.organization,
+          title: editableCard.title,
+          description: editableCard.description,
+          location: editableCard.location,
+          date: editableCard.date,
+          participants: editableCard.participants,
+          contact: editableCard.contact,
+          type: editableCard.type,
+          organization: editableCard.organization,
           created_by: user.id,
           is_generated: true,
           source_url: useUrl ? url : null,
@@ -132,6 +145,7 @@ const ContentCardGenerator = () => {
         description: "Iniziativa salvata tra le attività disponibili",
       });
 
+      setIsEditing(false);
       resetForm();
     } catch (error) {
       console.error('Error saving initiative:', error);
@@ -270,10 +284,117 @@ const ContentCardGenerator = () => {
         </CardContent>
       </Card>
 
-      {generatedCard && (
+      {generatedCard && isEditing && editableCard && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">Scheda Generata</h3>
+            <h3 className="text-lg font-semibold">Modifica Scheda Attività</h3>
+            <p className="text-sm text-muted-foreground">
+              Rivedi e modifica i dettagli prima di salvare
+            </p>
+          </div>
+          
+          <Card>
+            <CardContent className="p-6 space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="edit-title">Titolo *</Label>
+                  <Input
+                    id="edit-title"
+                    value={editableCard.title}
+                    onChange={(e) => setEditableCard({ ...editableCard, title: e.target.value })}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-organization">Organizzazione</Label>
+                  <Input
+                    id="edit-organization"
+                    value={editableCard.organization}
+                    onChange={(e) => setEditableCard({ ...editableCard, organization: e.target.value })}
+                    className="mt-1"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="edit-description">Descrizione *</Label>
+                <Textarea
+                  id="edit-description"
+                  value={editableCard.description}
+                  onChange={(e) => setEditableCard({ ...editableCard, description: e.target.value })}
+                  rows={3}
+                  className="mt-1"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="edit-location">Luogo</Label>
+                  <Input
+                    id="edit-location"
+                    value={editableCard.location}
+                    onChange={(e) => setEditableCard({ ...editableCard, location: e.target.value })}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-date">Data/Orario</Label>
+                  <Input
+                    id="edit-date"
+                    value={editableCard.date}
+                    onChange={(e) => setEditableCard({ ...editableCard, date: e.target.value })}
+                    className="mt-1"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="edit-participants">Partecipanti</Label>
+                  <Input
+                    id="edit-participants"
+                    value={editableCard.participants}
+                    onChange={(e) => setEditableCard({ ...editableCard, participants: e.target.value })}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-contact">Contatto</Label>
+                  <Input
+                    id="edit-contact"
+                    value={editableCard.contact}
+                    onChange={(e) => setEditableCard({ ...editableCard, contact: e.target.value })}
+                    className="mt-1"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="edit-type">Tipo Attività</Label>
+                <Select 
+                  value={editableCard.type} 
+                  onValueChange={(value: "l2" | "cultura" | "social" | "sport") => 
+                    setEditableCard({ ...editableCard, type: value })
+                  }
+                >
+                  <SelectTrigger className="mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="l2">Corso L2</SelectItem>
+                    <SelectItem value="cultura">Cultura</SelectItem>
+                    <SelectItem value="social">Sociale</SelectItem>
+                    <SelectItem value="sport">Sport</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="flex gap-3 justify-end">
+            <Button variant="outline" onClick={handleCancelEdit}>
+              Annulla
+            </Button>
             <Button onClick={handleSaveInitiative} disabled={isSaving}>
               {isSaving ? (
                 <>
@@ -283,10 +404,35 @@ const ContentCardGenerator = () => {
               ) : (
                 <>
                   <Save className="h-4 w-4 mr-2" />
-                  Salva tra le Iniziative
+                  Salva Iniziativa
                 </>
               )}
             </Button>
+          </div>
+
+          <div className="mt-6">
+            <h4 className="text-md font-medium mb-3">Anteprima Scheda</h4>
+            <ActivityCard
+              title={editableCard.title}
+              description={editableCard.description}
+              location={editableCard.location}
+              date={editableCard.date}
+              participants={editableCard.participants}
+              contact={editableCard.contact}
+              type={editableCard.type}
+              organization={editableCard.organization}
+            />
+          </div>
+        </div>
+      )}
+
+      {generatedCard && !isEditing && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold">Iniziativa Salvata</h3>
+            <Badge variant="outline" className="bg-success/10 text-success border-success">
+              ✓ Salvata
+            </Badge>
           </div>
           <ActivityCard
             title={generatedCard.title}
