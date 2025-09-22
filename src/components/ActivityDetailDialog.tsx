@@ -176,29 +176,31 @@ const ActivityDetailDialog = ({ activity, open, onOpenChange, onActivityUpdate }
             </div>
 
             {/* NAI Benefits Box */}
-            {activity.nai_benefits && (
-              <div>
-                <Label htmlFor="nai_benefits">Benefici per studenti NAI</Label>
-                {isEditing ? (
-                  <Textarea
-                    id="nai_benefits"
-                    value={editData.nai_benefits || ""}
-                    onChange={(e) => setEditData({ ...editData, nai_benefits: e.target.value })}
-                    className="mt-1"
-                    rows={3}
-                  />
-                ) : (
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-3 rounded-lg border border-blue-200 dark:border-blue-800 mt-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-blue-600 dark:text-blue-400 font-medium text-xs">💡 Benefici per studenti NAI</span>
-                    </div>
-                    <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
-                      {activity.nai_benefits}
-                    </p>
+            <div>
+              <Label htmlFor="nai_benefits">Benefici per studenti NAI</Label>
+              {isEditing ? (
+                <Textarea
+                  id="nai_benefits"
+                  value={editData.nai_benefits || ""}
+                  onChange={(e) => setEditData({ ...editData, nai_benefits: e.target.value })}
+                  className="mt-1"
+                  rows={3}
+                />
+              ) : (
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-3 rounded-lg border border-blue-200 dark:border-blue-800 mt-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-blue-600 dark:text-blue-400 font-medium text-xs">💡 Benefici per studenti NAI</span>
                   </div>
-                )}
-              </div>
-            )}
+                  <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
+                    {(activity.nai_benefits || "Non specificato")
+                      .replace(/<[^>]*>/g, '')
+                      .replace(/&[a-zA-Z0-9#]+;/g, ' ')
+                      .replace(/\s+/g, ' ')
+                      .trim() || "Non specificato"}
+                  </p>
+                </div>
+              )}
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
