@@ -158,6 +158,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
             ` : ''}
             
             <div class="flex items-center">
+              <span class="text-indigo-600 mr-2">👥</span>
+              <span class="text-gray-700">${location.participants || 'non definito'}</span>
+            </div>
+            
+            <div class="flex items-center">
               <span class="text-orange-600 mr-2">🏷️</span>
               <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">${location.type}</span>
             </div>
