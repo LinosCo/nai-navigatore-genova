@@ -36,11 +36,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
   // Colors for different service types
   const typeColors = {
-    l2: '#hsl(var(--primary))',
-    cultura: '#hsl(var(--secondary))',
-    social: '#hsl(var(--accent))',
-    sport: '#hsl(var(--success))',
-    default: '#hsl(var(--muted-foreground))'
+    l2: '#3b82f6',
+    cultura: '#8b5cf6', 
+    social: '#10b981',
+    sport: '#f59e0b',
+    default: '#6b7280'
   };
 
   // Try to get Mapbox token from edge function
@@ -97,7 +97,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
     markers.current.forEach(marker => marker.remove());
     markers.current = [];
 
+    console.log('Adding markers for locations:', locations);
+    
     locations.forEach(location => {
+      console.log('Creating marker for:', location.name, 'at', location.coordinates);
+      
       // Create marker element
       const markerElement = document.createElement('div');
       markerElement.className = 'w-6 h-6 rounded-full border-2 border-white shadow-lg cursor-pointer transition-transform hover:scale-110';
