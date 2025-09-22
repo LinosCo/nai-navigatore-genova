@@ -140,6 +140,24 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
   useEffect(() => {
     if (isTokenSet && mapboxToken) {
       initializeMap();
+      
+      // Check for URL parameters to center map on specific location
+      const urlParams = new URLSearchParams(window.location.search);
+      const lat = urlParams.get('lat');
+      const lng = urlParams.get('lng');
+      
+      if (lat && lng && map.current) {
+        const latitude = parseFloat(lat);
+        const longitude = parseFloat(lng);
+        
+        setTimeout(() => {
+          map.current?.flyTo({
+            center: [longitude, latitude],
+            zoom: 16,
+            duration: 2000
+          });
+        }, 1000);
+      }
     }
   }, [isTokenSet, mapboxToken, locations]);
 

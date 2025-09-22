@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
+import MapPreview from "@/components/MapPreview";
 
 interface ActivityCardProps {
   id?: string;
@@ -204,6 +205,21 @@ const ActivityCard = ({
             <span>{participants}</span>
           </div>
         </div>
+
+        {/* Map Preview */}
+        {(latitude && longitude) && (
+          <div className="mt-3">
+            <MapPreview
+              latitude={latitude}
+              longitude={longitude}
+              location={location}
+              onViewFullMap={() => {
+                // Navigate to map page with this location
+                window.location.href = `/map?lat=${latitude}&lng=${longitude}`;
+              }}
+            />
+          </div>
+        )}
       </CardContent>
 
       <CardFooter className="pt-0 space-y-2">
