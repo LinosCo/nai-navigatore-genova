@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { MapPin } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface Location {
   id: string;
@@ -46,16 +47,21 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
   useEffect(() => {
     const fetchToken = async () => {
       try {
-        const response = await fetch('/functions/v1/get-mapbox-token');
-        if (response.ok) {
-          const data = await response.json();
-          if (data.token) {
-            setMapboxToken(data.token);
-            setIsTokenSet(true);
-          }
+        const { data, error } = await supabase.functions.invoke('get-mapbox-token');
+        
+        if (error) {
+          console.error('Error fetching Mapbox token:', error);
+          return;
+        }
+        
+        if (data?.token) {
+          setMapboxToken(data.token);
+          setIsTokenSet(true);
+        } else {
+          console.error('No token received from edge function');
         }
       } catch (error) {
-        console.log('Could not fetch token from edge function, user will need to input manually');
+        console.error('Error calling edge function:', error);
       }
     };
     
@@ -166,31 +172,10 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       <Card className="h-96 flex items-center justify-center">
         <div className="text-center p-6 max-w-md">
           <MapPin className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-foreground mb-2">Configura Mapbox</h3>
-          <p className="text-muted-foreground text-sm mb-4">
-            Inserisci il tuo token pubblico Mapbox per visualizzare la mappa interattiva.
-            Puoi trovarlo su{' '}
-            <a 
-              href="https://mapbox.com/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              mapbox.com
-            </a>
+          <h3 className="text-lg font-medium text-foreground mb-2">Caricamento mappa...</h3>
+          <p className="text-muted-foreground text-sm">
+            Sto recuperando la configurazione della mappa
           </p>
-          <div className="flex gap-2">
-            <Input
-              type="text"
-              placeholder="pk.eyJ1Ijoi..."
-              value={mapboxToken}
-              onChange={(e) => setMapboxToken(e.target.value)}
-              className="flex-1"
-            />
-            <Button onClick={handleTokenSubmit} disabled={!mapboxToken.trim()}>
-              Avvia
-            </Button>
-          </div>
         </div>
       </Card>
     );
