@@ -1,11 +1,20 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Search, Map, BookOpen, HelpCircle, User, Bell } from "lucide-react";
+import { Search, Map, BookOpen, HelpCircle, User, Bell, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navigation = () => {
   const [hasNotifications] = useState(true);
+  const { user, signOut } = useAuth();
 
   const navItems = [
     {
@@ -80,17 +89,43 @@ const Navigation = () => {
               )}
             </Button>
             
-            <div className="flex items-center space-x-3 pl-3 border-l border-border">
-              <div className="text-right text-sm">
-                <p className="font-medium text-foreground">Prof. Rossi</p>
-                <p className="text-xs text-muted-foreground">IC Sampierdarena</p>
+            {user ? (
+              <div className="flex items-center space-x-3 pl-3 border-l border-border">
+                <div className="text-right text-sm">
+                  <p className="font-medium text-foreground">{user.email}</p>
+                  <p className="text-xs text-muted-foreground">Utente</p>
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                      <Avatar className="w-8 h-8">
+                        <AvatarFallback className="bg-secondary text-secondary-foreground text-sm">
+                          {user.email?.charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <DropdownMenuItem className="flex items-center">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profilo</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem 
+                      className="flex items-center text-destructive" 
+                      onClick={signOut}
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Esci</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
-              <Avatar className="w-8 h-8">
-                <AvatarFallback className="bg-secondary text-secondary-foreground text-sm">
-                  PR
-                </AvatarFallback>
-              </Avatar>
-            </div>
+            ) : (
+              <Button asChild variant="default" size="sm">
+                <NavLink to="/auth">Accedi</NavLink>
+              </Button>
+            )}
           </div>
         </div>
 

@@ -1,8 +1,20 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
+import { useAuth } from "@/hooks/useAuth";
 import SearchSection from "@/components/SearchSection";
 import ActivityCard from "@/components/ActivityCard";
 
 const Index = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Redirect authenticated users to activities page
+    if (user) {
+      navigate("/attivita");
+    }
+  }, [user, navigate]);
   const mockActivities = [
     {
       title: "Corso di Italiano L2 - Livello A1",

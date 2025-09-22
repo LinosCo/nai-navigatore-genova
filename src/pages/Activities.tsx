@@ -7,21 +7,29 @@ import { Button } from "@/components/ui/button";
 import { Heart, Calendar, Filter, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import AuthGuard from "@/components/AuthGuard";
+import { useAuth } from "@/hooks/useAuth";
 
 const Activities = () => {
   const [initiatives, setInitiatives] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const { user } = useAuth();
 
   useEffect(() => {
-    fetchInitiatives();
-  }, []);
+    if (user) {
+      fetchInitiatives();
+    }
+  }, [user]);
 
   const fetchInitiatives = async () => {
+    if (!user) return;
+    
     try {
       const { data, error } = await supabase
         .from('initiatives')
         .select('*')
+        .eq('created_by', user.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -64,10 +72,11 @@ const Activities = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <AuthGuard>
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h1 className="text-2xl font-semibold text-foreground mb-2">Le mie attività</h1>
           <p className="text-muted-foreground">
@@ -187,6 +196,7 @@ const Activities = () => {
         </div>
       </main>
     </div>
+    </AuthGuard>
   );
 };
 
