@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Navigation from "@/components/Navigation";
 import ActivityCard from "@/components/ActivityCard";
+import ActivityDetailDialog from "@/components/ActivityDetailDialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,8 @@ import { useAuth } from "@/hooks/useAuth";
 const Activities = () => {
   const [initiatives, setInitiatives] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedActivity, setSelectedActivity] = useState<any>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -44,6 +47,20 @@ const Activities = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleActivityClick = (activity: any) => {
+    setSelectedActivity(activity);
+    setDialogOpen(true);
+  };
+
+  const handleActivityUpdate = (updatedActivity: any) => {
+    setInitiatives(prev => 
+      prev.map(initiative => 
+        initiative.id === updatedActivity.id ? updatedActivity : initiative
+      )
+    );
+    setSelectedActivity(updatedActivity);
   };
 
   const recentlyViewed = [
@@ -147,6 +164,7 @@ const Activities = () => {
               {initiatives.map((initiative) => (
                 <div key={initiative.id} className="relative">
                   <ActivityCard
+                    id={initiative.id}
                     title={initiative.title}
                     description={initiative.description}
                     location={initiative.location}
@@ -155,6 +173,10 @@ const Activities = () => {
                     contact={initiative.contact}
                     type={initiative.type}
                     organization={initiative.organization}
+                    created_by={initiative.created_by}
+                    is_generated={initiative.is_generated}
+                    source_url={initiative.source_url}
+                    onTitleClick={() => handleActivityClick(initiative)}
                   />
                   {initiative.is_generated && (
                     <Badge 
@@ -195,6 +217,13 @@ const Activities = () => {
           </div>
         </div>
       </main>
+
+      <ActivityDetailDialog
+        activity={selectedActivity}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        onActivityUpdate={handleActivityUpdate}
+      />
     </div>
     </AuthGuard>
   );

@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 
 interface ActivityCardProps {
+  id?: string;
   title: string;
   description: string;
   location: string;
@@ -15,9 +16,14 @@ interface ActivityCardProps {
   type: "l2" | "cultura" | "social" | "sport";
   organization: string;
   isSaved?: boolean;
+  created_by?: string;
+  is_generated?: boolean;
+  source_url?: string;
+  onTitleClick?: () => void;
 }
 
 const ActivityCard = ({
+  id,
   title,
   description,
   location,
@@ -26,7 +32,11 @@ const ActivityCard = ({
   contact,
   type,
   organization,
-  isSaved = false
+  isSaved = false,
+  created_by,
+  is_generated,
+  source_url,
+  onTitleClick
 }: ActivityCardProps) => {
   const [saved, setSaved] = useState(isSaved);
   const { toast } = useToast();
@@ -75,7 +85,10 @@ const ActivityCard = ({
                 {organization}
               </Badge>
             </div>
-            <h3 className="font-semibold text-foreground leading-tight">
+            <h3 
+              className={`font-semibold text-foreground leading-tight ${onTitleClick ? 'cursor-pointer hover:text-primary transition-colors' : ''}`}
+              onClick={onTitleClick}
+            >
               {title}
             </h3>
           </div>
