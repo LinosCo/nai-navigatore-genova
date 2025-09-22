@@ -114,14 +114,24 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
         closeButton: false,
         className: 'mapbox-popup'
       }).setHTML(`
-        <div class="p-2">
-          <h3 class="font-semibold text-sm mb-1">${location.name}</h3>
-          <p class="text-xs text-gray-600 mb-1">${location.address}</p>
-          <div class="flex flex-wrap gap-1">
-            ${location.services.map(service => 
-              `<span class="text-xs bg-gray-100 px-1 py-0.5 rounded">${service}</span>`
-            ).join('')}
+        <div class="p-3 min-w-[200px]">
+          <h3 class="font-semibold text-sm mb-2 text-gray-900">${location.name}</h3>
+          <p class="text-xs text-gray-600 mb-2 flex items-center">
+            <span class="mr-1">📍</span>${location.address}
+          </p>
+          <div class="mb-2">
+            <span class="text-xs font-medium text-gray-700">Tipo:</span>
+            <span class="text-xs ml-1 px-2 py-1 bg-blue-100 text-blue-800 rounded">${location.type}</span>
           </div>
+          <div class="mb-2">
+            <span class="text-xs font-medium text-gray-700">Organizzazione:</span>
+            <div class="flex flex-wrap gap-1 mt-1">
+              ${location.services.map(service => 
+                `<span class="text-xs bg-gray-100 px-2 py-1 rounded">${service}</span>`
+              ).join('')}
+            </div>
+          </div>
+          <div class="text-xs text-gray-500">Municipio: ${location.district}</div>
         </div>
       `);
 
