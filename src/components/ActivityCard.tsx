@@ -174,7 +174,7 @@ const ActivityCard = ({
 
       <CardContent className="space-y-3 pt-0">
         <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
-          {description.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()}
+          {description.replace(/<[^>]*>/g, '').replace(/&[a-zA-Z0-9#]+;/g, ' ').replace(/\s+/g, ' ').trim()}
         </p>
 
         <div className="space-y-2">

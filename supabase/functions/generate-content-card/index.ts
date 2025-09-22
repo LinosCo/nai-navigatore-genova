@@ -140,18 +140,34 @@ serve(async (req) => {
 
     console.log('Generated content:', generatedContent);
 
-    // Try to parse as JSON, fallback to structured text
+    // Parsing più robusto del JSON
     let contentCard;
     try {
-      const cleanContent = generatedContent.replace(/```json\n?|\n?```/g, '').trim();
-      contentCard = JSON.parse(cleanContent);
+      // Estrai il JSON dal contenuto generato
+      let jsonString = generatedContent;
       
-      // Pulisci la descrizione da eventuali residui HTML
+      // Se c'è il wrapper ```json, estrailo
+      const jsonMatch = jsonString.match(/```json\s*([\s\S]*?)\s*```/);
+      if (jsonMatch) {
+        jsonString = jsonMatch[1];
+      }
+      
+      // Pulisci la stringa prima del parsing
+      jsonString = jsonString
+        .trim()
+        .replace(/^\s*```json\s*/g, '')
+        .replace(/\s*```\s*$/g, '')
+        .replace(/,\s*}/g, '}')
+        .replace(/,\s*]/g, ']');
+      
+      contentCard = JSON.parse(jsonString);
+      
+      // Pulisci la descrizione da HTML e formattala meglio
       if (contentCard.description) {
         contentCard.description = contentCard.description
-          .replace(/<[^>]*>/g, ' ')
-          .replace(/&[a-zA-Z0-9#]+;/g, ' ')
-          .replace(/\s+/g, ' ')
+          .replace(/<[^>]*>/g, '') // Rimuovi tag HTML
+          .replace(/&[a-zA-Z0-9#]+;/g, ' ') // Rimuovi entità HTML
+          .replace(/\s+/g, ' ') // Rimuovi spazi multipli
           .trim();
       }
       

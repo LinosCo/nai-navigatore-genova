@@ -118,24 +118,36 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
         closeButton: false,
         className: 'mapbox-popup'
       }).setHTML(`
-        <div class="p-3 min-w-[200px]">
-          <h3 class="font-semibold text-sm mb-2 text-gray-900">${location.name}</h3>
-          <p class="text-xs text-gray-600 mb-2 flex items-center">
-            <span class="mr-1">📍</span>${location.address}
-          </p>
-          <div class="mb-2">
-            <span class="text-xs font-medium text-gray-700">Tipo:</span>
-            <span class="text-xs ml-1 px-2 py-1 bg-blue-100 text-blue-800 rounded">${location.type}</span>
-          </div>
-          <div class="mb-2">
-            <span class="text-xs font-medium text-gray-700">Organizzazione:</span>
-            <div class="flex flex-wrap gap-1 mt-1">
-              ${location.services.map(service => 
-                `<span class="text-xs bg-gray-100 px-2 py-1 rounded">${service}</span>`
-              ).join('')}
+        <div class="p-3 min-w-[200px] max-w-[280px]">
+          <h3 class="font-semibold text-sm mb-2 text-gray-900 leading-tight">${location.name}</h3>
+          
+          <div class="space-y-2 text-xs">
+            <div class="flex items-start">
+              <span class="text-blue-600 mr-2">📍</span>
+              <span class="text-gray-600 leading-relaxed">${location.address}</span>
+            </div>
+            
+            <div class="flex items-center">
+              <span class="text-purple-600 mr-2">🏷️</span>
+              <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">${location.type}</span>
+            </div>
+            
+            <div class="flex items-center">
+              <span class="text-green-600 mr-2">🏢</span>
+              <span class="text-gray-700 font-medium">${location.services[0] || 'Non specificato'}</span>
+            </div>
+            
+            <div class="flex items-center">
+              <span class="text-orange-600 mr-2">🗺️</span>
+              <span class="text-gray-500 text-xs">${location.district}</span>
             </div>
           </div>
-          <div class="text-xs text-gray-500">Municipio: ${location.district}</div>
+          
+          <div class="mt-3 pt-2 border-t border-gray-200">
+            <button class="w-full px-3 py-1.5 bg-blue-600 text-white text-xs rounded-md hover:bg-blue-700 transition-colors font-medium">
+              Maggiori dettagli
+            </button>
+          </div>
         </div>
       `);
 
