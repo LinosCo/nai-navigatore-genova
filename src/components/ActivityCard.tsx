@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { Heart, MapPin, Calendar, Users, Phone, ExternalLink, BookOpen } from "lucide-react";
+import { Heart, MapPin, Calendar, Users, Phone, ExternalLink, BookOpen, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { useUserRole } from "@/hooks/useUserRole";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ActivityCardProps {
   id?: string;
@@ -23,6 +26,7 @@ interface ActivityCardProps {
   is_generated?: boolean;
   source_url?: string;
   onTitleClick?: () => void;
+  onDelete?: (id: string) => void;
 }
 
 const ActivityCard = ({
@@ -42,10 +46,14 @@ const ActivityCard = ({
   created_by,
   is_generated,
   source_url,
-  onTitleClick
+  onTitleClick,
+  onDelete
 }: ActivityCardProps) => {
   const [saved, setSaved] = useState(isSaved);
+  const [deleting, setDeleting] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
+  const { isAdmin } = useUserRole();
 
   const typeConfig = {
     l2: { label: "Corso L2", color: "bg-primary text-primary-foreground" },
@@ -78,6 +86,47 @@ const ActivityCard = ({
     });
   };
 
+  const handleDelete = async () => {
+    if (!id) return;
+    
+    setDeleting(true);
+    try {
+      const { error } = await supabase
+        .from('initiatives')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        toast({
+          title: "Errore",
+          description: "Impossibile eliminare l'attività",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "Successo",
+        description: "Attività eliminata con successo",
+      });
+
+      if (onDelete) {
+        onDelete(id);
+      }
+    } catch (error) {
+      toast({
+        title: "Errore",
+        description: "Si è verificato un errore durante l'eliminazione",
+        variant: "destructive",
+      });
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  // Check if user can delete this activity
+  const canDelete = user && id && (isAdmin || user.id === created_by);
+
   return (
     <Card className="hover:shadow-md transition-shadow duration-200 border border-border">
       <CardHeader className="pb-3">
@@ -98,14 +147,27 @@ const ActivityCard = ({
               {title}
             </h3>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleSave}
-            className={`${saved ? 'text-accent' : 'text-muted-foreground'} hover:text-accent`}
-          >
-            <Heart className={`h-4 w-4 ${saved ? 'fill-current' : ''}`} />
-          </Button>
+          <div className="flex space-x-1">
+            {canDelete && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleDelete}
+                disabled={deleting}
+                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            )}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleSave}
+              className={`${saved ? 'text-accent' : 'text-muted-foreground'} hover:text-accent`}
+            >
+              <Heart className={`h-4 w-4 ${saved ? 'fill-current' : ''}`} />
+            </Button>
+          </div>
         </div>
       </CardHeader>
 

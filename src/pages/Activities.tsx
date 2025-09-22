@@ -63,6 +63,15 @@ const Activities = () => {
     setSelectedActivity(updatedActivity);
   };
 
+  const handleActivityDelete = (deletedId: string) => {
+    setInitiatives(prev => prev.filter(initiative => initiative.id !== deletedId));
+    // Close dialog if the deleted activity was selected
+    if (selectedActivity?.id === deletedId) {
+      setDialogOpen(false);
+      setSelectedActivity(null);
+    }
+  };
+
   const recentlyViewed = [
     {
       title: "Corso di Italiano L2 - Livello A1",
@@ -179,6 +188,7 @@ const Activities = () => {
                     is_generated={initiative.is_generated}
                     source_url={initiative.source_url}
                     onTitleClick={() => handleActivityClick(initiative)}
+                    onDelete={handleActivityDelete}
                   />
                   {initiative.is_generated && (
                     <Badge 
