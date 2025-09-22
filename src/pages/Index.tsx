@@ -9,12 +9,7 @@ const Index = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Redirect authenticated users to activities page
-    if (user) {
-      navigate("/attivita");
-    }
-  }, [user, navigate]);
+  // Removed auto-redirect to allow users to access search functionality
   const mockActivities = [
     {
       title: "Corso di Italiano L2 - Livello A1",
