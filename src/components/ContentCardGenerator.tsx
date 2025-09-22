@@ -193,6 +193,7 @@ const ContentCardGenerator = () => {
         .insert({
           title: editableCard.title,
           description: editableCard.description.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim(),
+          nai_benefits: editableCard.nai_benefits || null,
           location: editableCard.address || editableCard.location,
           date: editableCard.date,
           participants: editableCard.participants,

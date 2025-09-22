@@ -56,6 +56,7 @@ export type Database = {
           latitude: number | null
           location: string
           longitude: number | null
+          nai_benefits: string | null
           organization: string
           participants: string
           source_url: string | null
@@ -74,6 +75,7 @@ export type Database = {
           latitude?: number | null
           location: string
           longitude?: number | null
+          nai_benefits?: string | null
           organization: string
           participants: string
           source_url?: string | null
@@ -92,6 +94,7 @@ export type Database = {
           latitude?: number | null
           location?: string
           longitude?: number | null
+          nai_benefits?: string | null
           organization?: string
           participants?: string
           source_url?: string | null
