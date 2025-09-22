@@ -173,6 +173,8 @@ const Activities = () => {
                     contact={initiative.contact}
                     type={initiative.type}
                     organization={initiative.organization}
+                    latitude={initiative.latitude || undefined}
+                    longitude={initiative.longitude || undefined}
                     created_by={initiative.created_by}
                     is_generated={initiative.is_generated}
                     source_url={initiative.source_url}

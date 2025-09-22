@@ -17,6 +17,7 @@ interface GeneratedCard {
   title: string;
   description: string;
   location: string;
+  address?: string;
   date: string;
   participants: string;
   contact: string;
@@ -190,8 +191,8 @@ const ContentCardGenerator = () => {
         .from('initiatives')
         .insert({
           title: editableCard.title,
-          description: editableCard.description,
-          location: editableCard.location,
+          description: editableCard.description.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim(),
+          location: editableCard.address || editableCard.location,
           date: editableCard.date,
           participants: editableCard.participants,
           contact: editableCard.contact,
@@ -436,8 +437,22 @@ const ContentCardGenerator = () => {
                     value={editableCard.location}
                     onChange={(e) => setEditableCard({ ...editableCard, location: e.target.value })}
                     className="mt-1"
+                    placeholder="Nome del luogo"
                   />
                 </div>
+                <div>
+                  <Label htmlFor="edit-address">Indirizzo completo</Label>
+                  <Input
+                    id="edit-address"
+                    value={editableCard.address || ''}
+                    onChange={(e) => setEditableCard({ ...editableCard, address: e.target.value })}
+                    className="mt-1"
+                    placeholder="Via, numero civico, città"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="edit-date">Data/Orario</Label>
                   <Input
@@ -446,6 +461,27 @@ const ContentCardGenerator = () => {
                     onChange={(e) => setEditableCard({ ...editableCard, date: e.target.value })}
                     className="mt-1"
                   />
+                </div>
+                <div>
+                  <Label htmlFor="edit-coordinates">Coordinate GPS</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="Lat"
+                      value={editableCard.latitude || ''}
+                      onChange={(e) => setEditableCard({ ...editableCard, latitude: parseFloat(e.target.value) || undefined })}
+                      className="mt-1"
+                      type="number"
+                      step="0.0001"
+                    />
+                    <Input
+                      placeholder="Lng"
+                      value={editableCard.longitude || ''}
+                      onChange={(e) => setEditableCard({ ...editableCard, longitude: parseFloat(e.target.value) || undefined })}
+                      className="mt-1"
+                      type="number"
+                      step="0.0001"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -518,11 +554,14 @@ const ContentCardGenerator = () => {
               title={editableCard.title}
               description={editableCard.description}
               location={editableCard.location}
+              address={editableCard.address}
               date={editableCard.date}
               participants={editableCard.participants}
               contact={editableCard.contact}
               type={editableCard.type}
               organization={editableCard.organization}
+              latitude={editableCard.latitude}
+              longitude={editableCard.longitude}
             />
           </div>
         </div>
@@ -540,11 +579,14 @@ const ContentCardGenerator = () => {
             title={generatedCard.title}
             description={generatedCard.description}
             location={generatedCard.location}
+            address={generatedCard.address}
             date={generatedCard.date}
             participants={generatedCard.participants}
             contact={generatedCard.contact}
             type={generatedCard.type}
             organization={generatedCard.organization}
+            latitude={generatedCard.latitude}
+            longitude={generatedCard.longitude}
           />
         </div>
       )}

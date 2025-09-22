@@ -10,11 +10,14 @@ interface ActivityCardProps {
   title: string;
   description: string;
   location: string;
+  address?: string;
   date: string;
   participants: string;
   contact: string;
   type: "l2" | "cultura" | "social" | "sport";
   organization: string;
+  latitude?: number;
+  longitude?: number;
   isSaved?: boolean;
   created_by?: string;
   is_generated?: boolean;
@@ -27,11 +30,14 @@ const ActivityCard = ({
   title,
   description,
   location,
+  address,
   date,
   participants,
   contact,
   type,
   organization,
+  latitude,
+  longitude,
   isSaved = false,
   created_by,
   is_generated,
@@ -104,14 +110,26 @@ const ActivityCard = ({
       </CardHeader>
 
       <CardContent className="space-y-3 pt-0">
-        <p className="text-sm text-muted-foreground line-clamp-2">
-          {description}
+        <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
+          {description.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()}
         </p>
 
         <div className="space-y-2">
-          <div className="flex items-center text-xs text-muted-foreground">
-            <MapPin className="h-3 w-3 mr-2 flex-shrink-0" />
-            <span className="truncate">{location}</span>
+          <div className="flex items-start text-xs text-muted-foreground">
+            <MapPin className="h-3 w-3 mr-2 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <div className="font-medium">{location.split(',')[0]}</div>
+              {address && address !== location && (
+                <div className="text-muted-foreground/80 text-[10px] mt-0.5">
+                  {address}
+                </div>
+              )}
+              {latitude && longitude && (
+                <div className="text-muted-foreground/60 text-[10px] mt-0.5">
+                  📍 {latitude.toFixed(4)}, {longitude.toFixed(4)}
+                </div>
+              )}
+            </div>
           </div>
           
           <div className="flex items-center text-xs text-muted-foreground">

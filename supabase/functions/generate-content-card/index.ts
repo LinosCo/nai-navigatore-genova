@@ -35,16 +35,33 @@ serve(async (req) => {
         }
         const html = await response.text();
         
-        // Estrai testo dalla pagina HTML (versione semplificata)
-        const textContent = html
+        // Estrazione più avanzata del contenuto
+        let textContent = html
+          // Rimuovi script, style e altri elementi non necessari
           .replace(/<script[^>]*>.*?<\/script>/gis, '')
           .replace(/<style[^>]*>.*?<\/style>/gis, '')
+          .replace(/<noscript[^>]*>.*?<\/noscript>/gis, '')
+          .replace(/<!--[\s\S]*?-->/g, '')
+          // Sostituisci alcuni tag con spazi per preservare la separazione
+          .replace(/<\/?(div|p|br|section|article|header|footer|nav|main)[^>]*>/gi, ' ')
+          // Rimuovi tutti gli altri tag HTML
           .replace(/<[^>]*>/g, ' ')
+          // Pulisci gli spazi multipli e i caratteri speciali
+          .replace(/&[a-zA-Z0-9#]+;/g, ' ')
           .replace(/\s+/g, ' ')
           .trim();
         
-        contentToAnalyze = textContent.substring(0, 2000); // Limita la lunghezza
+        // Estrai anche il titolo della pagina se presente
+        const titleMatch = html.match(/<title[^>]*>(.*?)<\/title>/i);
+        const pageTitle = titleMatch ? titleMatch[1].replace(/<[^>]*>/g, '').trim() : '';
+        
+        if (pageTitle) {
+          textContent = `Titolo pagina: ${pageTitle}\n\n${textContent}`;
+        }
+        
+        contentToAnalyze = textContent.substring(0, 3000); // Aumenta il limite per più contesto
         console.log('Extracted content length:', contentToAnalyze.length);
+        console.log('Page title extracted:', pageTitle);
       } catch (error) {
         console.error('Error fetching URL content:', error);
         throw new Error('Errore nel recupero del contenuto dall\'URL');
@@ -54,28 +71,35 @@ serve(async (req) => {
     const systemPrompt = `Sei un assistente esperto nell'educazione interculturale per la piattaforma NEIP di Genova. 
     Crea schede dettagliate per attività educative rivolte a studenti NAI (Nuovi Arrivati in Italia).
     
-    Genera una risposta in formato JSON con questa struttura:
+    Genera una risposta in formato JSON con questa struttura ESATTA:
     {
-      "title": "Titolo attività",
-      "description": "Descrizione dettagliata dell'attività (100-150 parole)",
-      "location": "Luogo specifico a Genova",
-      "date": "Data suggerita nel formato DD/MM/YYYY",
-      "participants": "Numero partecipanti suggerito",
-      "contact": "Contatto di riferimento",
+      "title": "Titolo chiaro e specifico dell'attività",
+      "description": "Descrizione dettagliata in testo pulito senza codice HTML (150-200 parole). Includi obiettivi educativi, metodologia e benefici per l'integrazione.",
+      "location": "Nome del luogo e indirizzo completo a Genova (es: 'Biblioteca Berio, Via del Seminario 16, Genova')",
+      "address": "Indirizzo completo e preciso per la geolocalizzazione",
+      "date": "Data e orario specifici nel formato 'DD/MM/YYYY - HH:MM' oppure descrizione del periodo",
+      "participants": "Numero preciso o range di partecipanti (es: '15-20 studenti')",
+      "contact": "Contatto specifico con email o telefono",
       "type": "l2|cultura|social|sport",
-      "organization": "Nome organizzazione",
-      "latitude": "Latitudine precisa del luogo (numero decimale)",
-      "longitude": "Longitudine precisa del luogo (numero decimale)"
+      "organization": "Nome completo dell'organizzazione responsabile",
+      "latitude": numero decimale preciso per Genova,
+      "longitude": numero decimale preciso per Genova
     }
     
-    Considera sempre:
-    - Attività appropriate per studenti NAI
-    - Luoghi reali a Genova con coordinate GPS precise
-    - Obiettivi di integrazione e apprendimento linguistico
-    - Accessibilità e inclusività
+    REQUISITI CRITICI:
+    - DESCRIPTION: Solo testo pulito, NO codice HTML, NO tag, NO caratteri speciali
+    - LOCATION: Nome del luogo + indirizzo completo separati da virgola
+    - ADDRESS: Indirizzo completo per geolocalizzazione precisa
+    - COORDINATES: Sempre coordinate reali e precise di Genova (Centro: 44.4063, 8.9241)
+    - Attività sempre appropriate per studenti NAI
+    - Obiettivi chiari di integrazione linguistica e sociale
     
-    IMPORTANTE: Fornisci sempre coordinate geografiche precise per Genova e zone limitrofe.
-    Coordinate di riferimento per Genova centro: lat: 44.4063, lng: 8.9241`;
+    Luoghi di riferimento Genova con coordinate precise:
+    - Centro storico: 44.4063, 8.9241
+    - Palazzo Rosso: 44.4076, 8.9343
+    - Biblioteca Berio: 44.4055, 8.9251
+    - Palazzo Ducale: 44.4082, 8.9320
+    - Teatro Carlo Felice: 44.4091, 8.9334`;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -119,13 +143,39 @@ serve(async (req) => {
     // Try to parse as JSON, fallback to structured text
     let contentCard;
     try {
-      contentCard = JSON.parse(generatedContent);
+      const cleanContent = generatedContent.replace(/```json\n?|\n?```/g, '').trim();
+      contentCard = JSON.parse(cleanContent);
+      
+      // Pulisci la descrizione da eventuali residui HTML
+      if (contentCard.description) {
+        contentCard.description = contentCard.description
+          .replace(/<[^>]*>/g, ' ')
+          .replace(/&[a-zA-Z0-9#]+;/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+      }
+      
+      // Assicurati che le coordinate siano numeri
+      if (contentCard.latitude && typeof contentCard.latitude === 'string') {
+        contentCard.latitude = parseFloat(contentCard.latitude);
+      }
+      if (contentCard.longitude && typeof contentCard.longitude === 'string') {
+        contentCard.longitude = parseFloat(contentCard.longitude);
+      }
+      
+      // Se non c'è address, usa location
+      if (!contentCard.address && contentCard.location) {
+        contentCard.address = contentCard.location;
+      }
+      
     } catch (e) {
+      console.error('JSON parsing error:', e);
       // If not valid JSON, create a structured response
       contentCard = {
         title: "Attività Generata",
-        description: generatedContent,
-        location: location || "Genova",
+        description: generatedContent.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(),
+        location: location || "Genova Centro",
+        address: location || "Genova Centro",
         date: new Date().toLocaleDateString('it-IT'),
         participants: "10-15 studenti",
         contact: "info@neip.genova.it",
