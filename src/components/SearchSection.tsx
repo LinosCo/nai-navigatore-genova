@@ -1,140 +1,182 @@
 import { useState } from "react";
-import { Search, Filter, MapPin } from "lucide-react";
+import { Search, MapPin, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
-const SearchSection = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+interface SearchSectionProps {
+  onSearch?: (searchTerm: string, type: string, location: string) => void;
+}
 
-  const quickFilters = [
-    { id: "l2", label: "Corsi L2", color: "bg-primary" },
-    { id: "cultura", label: "Attività culturali", color: "bg-secondary" },
-    { id: "social", label: "Servizi sociali", color: "bg-accent" },
-    { id: "sampierdarena", label: "Sampierdarena", color: "bg-success" }
-  ];
+const SearchSection = ({ onSearch }: SearchSectionProps) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedType, setSelectedType] = useState("all");
+  const [selectedLocation, setSelectedLocation] = useState("all");
 
-  const recentSearches = [
-    "Corsi di italiano L2 Sampierdarena",
-    "Mediazione culturale scuole",
-    "Attività ricreative studenti NAI"
-  ];
-
-  const toggleFilter = (filterId: string) => {
-    setSelectedFilters(prev => 
-      prev.includes(filterId) 
-        ? prev.filter(id => id !== filterId)
-        : [...prev, filterId]
-    );
+  const handleSearch = () => {
+    if (onSearch) {
+      onSearch(searchTerm, selectedType, selectedLocation);
+    }
   };
 
+  const handleReset = () => {
+    setSearchTerm("");
+    setSelectedType("all");
+    setSelectedLocation("all");
+    if (onSearch) {
+      onSearch("", "all", "all");
+    }
+  };
+
+  const serviceTypes = [
+    { value: "all", label: "Tutti i servizi" },
+    { value: "l2", label: "Corsi L2" },
+    { value: "cultura", label: "Cultura" },
+    { value: "social", label: "Sociale" },
+    { value: "sport", label: "Sport" }
+  ];
+
+  const locations = [
+    { value: "all", label: "Tutte le zone" },
+    { value: "centro storico", label: "Centro Storico" },
+    { value: "sampierdarena", label: "Sampierdarena" },
+    { value: "centro ovest", label: "Centro Ovest" },
+    { value: "valpolcevera", label: "Valpolcevera" },
+    { value: "ponente", label: "Ponente" },
+    { value: "levante", label: "Levante" },
+    { value: "val bisagno", label: "Val Bisagno" }
+  ];
+
   return (
-    <div className="space-y-6">
-      {/* Main Search */}
-      <Card className="border-2 border-dashed border-primary/20 bg-primary-light/30">
-        <CardContent className="p-6">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-semibold text-foreground mb-2">
-              Trova iniziative per i tuoi studenti NAI
-            </h2>
-            <p className="text-muted-foreground">
-              Cerca corsi, attività e servizi nella città di Genova
+    <Card className="mb-8">
+      <CardContent className="p-6">
+        <div className="space-y-6">
+          {/* Hero Section */}
+          <div className="text-center">
+            <h1 className="text-3xl font-bold text-foreground mb-2">
+              Trova iniziative per studenti NAI
+            </h1>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Scopri corsi di lingua, attività culturali, servizi sociali e opportunità sportive 
+              nella città di Genova per studenti Neo Arrivati in Italia
             </p>
           </div>
 
-          <div className="max-w-2xl mx-auto space-y-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Es: Corsi di italiano L2 a Sampierdarena"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-20 h-12 text-base"
-              />
-              <Button className="absolute right-1 top-1 h-10">
+          {/* Search Form */}
+          <div className="space-y-4">
+            <div className="flex flex-col md:flex-row gap-4">
+              {/* Search Input */}
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Cerca iniziative, corsi, attività..."
+                  className="pl-10"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                />
+              </div>
+
+              {/* Type Filter */}
+              <div className="w-full md:w-48">
+                <Select value={selectedType} onValueChange={setSelectedType}>
+                  <SelectTrigger>
+                    <Filter className="h-4 w-4 mr-2" />
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {serviceTypes.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Location Filter */}
+              <div className="w-full md:w-48">
+                <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                  <SelectTrigger>
+                    <MapPin className="h-4 w-4 mr-2" />
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {locations.map((location) => (
+                      <SelectItem key={location.value} value={location.value}>
+                        {location.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Search Button */}
+              <Button onClick={handleSearch} className="w-full md:w-auto">
+                <Search className="h-4 w-4 mr-2" />
                 Cerca
               </Button>
             </div>
 
-            {/* Quick Filters */}
-            <div className="flex flex-wrap gap-2 justify-center">
-              {quickFilters.map((filter) => (
-                <Button
-                  key={filter.id}
-                  variant={selectedFilters.includes(filter.id) ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => toggleFilter(filter.id)}
-                  className="text-xs"
-                >
-                  {filter.label}
-                </Button>
-              ))}
-              <Button variant="outline" size="sm">
-                <Filter className="h-3 w-3 mr-1" />
-                Altri filtri
+            {/* Reset Button */}
+            <div className="flex justify-center">
+              <Button 
+                variant="outline" 
+                onClick={handleReset}
+                className="text-sm"
+              >
+                Cancella filtri
               </Button>
             </div>
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Quick Actions and Recent Searches */}
-      <div className="grid md:grid-cols-2 gap-6">
-        {/* Quick Actions */}
-        <Card>
-          <CardContent className="p-4">
-            <h3 className="font-medium text-foreground mb-3 flex items-center">
-              <MapPin className="h-4 w-4 mr-2 text-primary" />
-              Azioni rapide
-            </h3>
-            <div className="space-y-2">
-              <Button variant="ghost" className="w-full justify-start h-auto p-3 text-left">
-                <div>
-                  <div className="font-medium text-sm">Trova mediatori culturali</div>
-                  <div className="text-xs text-muted-foreground">Supporto linguistico per colloqui</div>
-                </div>
-              </Button>
-              <Button variant="ghost" className="w-full justify-start h-auto p-3 text-left">
-                <div>
-                  <div className="font-medium text-sm">Corsi L2 gratuiti</div>
-                  <div className="text-xs text-muted-foreground">Percorsi di alfabetizzazione</div>
-                </div>
-              </Button>
-              <Button variant="ghost" className="w-full justify-start h-auto p-3 text-left">
-                <div>
-                  <div className="font-medium text-sm">Attività extrascolastiche</div>
-                  <div className="text-xs text-muted-foreground">Sport e cultura per l'integrazione</div>
-                </div>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Recent Searches */}
-        <Card>
-          <CardContent className="p-4">
-            <h3 className="font-medium text-foreground mb-3">Ricerche recenti</h3>
-            <div className="space-y-2">
-              {recentSearches.map((search, index) => (
-                <Button
-                  key={index}
-                  variant="ghost"
-                  className="w-full justify-start h-auto p-3 text-left"
-                  onClick={() => setSearchQuery(search)}
-                >
-                  <div className="flex items-center space-x-2">
-                    <Search className="h-3 w-3 text-muted-foreground flex-shrink-0" />
-                    <span className="text-sm truncate">{search}</span>
-                  </div>
-                </Button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+          {/* Quick Filter Tags */}
+          <div className="flex flex-wrap gap-2 justify-center">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setSelectedType("l2");
+                if (onSearch) onSearch(searchTerm, "l2", selectedLocation);
+              }}
+            >
+              Corsi Italiano
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setSelectedType("cultura");
+                if (onSearch) onSearch(searchTerm, "cultura", selectedLocation);
+              }}
+            >
+              Attività Culturali
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setSelectedType("social");
+                if (onSearch) onSearch(searchTerm, "social", selectedLocation);
+              }}
+            >
+              Servizi Sociali
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setSelectedType("sport");
+                if (onSearch) onSearch(searchTerm, "sport", selectedLocation);
+              }}
+            >
+              Sport
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
