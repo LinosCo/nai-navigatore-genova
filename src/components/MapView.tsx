@@ -65,7 +65,7 @@ const MapView = () => {
 
       setInitiatives(initiativesData || []);
       
-      // Convert initiatives to map locations
+      // Convert initiatives to map locations with complete data
       const mapLocations: Location[] = (initiativesData || [])
         .filter(initiative => initiative.latitude && initiative.longitude)
         .map(initiative => ({
@@ -78,7 +78,13 @@ const MapView = () => {
           coordinates: { 
             lat: initiative.latitude!, 
             lng: initiative.longitude! 
-          }
+          },
+          // Passa i dati completi dell'iniziativa
+          description: initiative.description,
+          organization: initiative.organization,
+          date: initiative.date,
+          participants: initiative.participants,
+          contact: initiative.contact
         }));
 
       setLocations(mapLocations);
