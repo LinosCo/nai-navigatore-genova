@@ -3,6 +3,7 @@ import { MapPin, Filter, List, Grid } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import InteractiveMap from "@/components/InteractiveMap";
 
 // Mock data for demonstration
 const mockLocations = [
@@ -48,6 +49,7 @@ const MapView = () => {
   const [selectedDistrict, setSelectedDistrict] = useState<string>("all");
   const [selectedType, setSelectedType] = useState<string>("all");
   const [viewMode, setViewMode] = useState<"map" | "list">("map");
+  const [selectedLocation, setSelectedLocation] = useState<typeof mockLocations[0] | null>(null);
 
   const districts = ["all", "Sampierdarena", "Centro Storico", "Centro Ovest", "Valpolcevera"];
   const serviceTypes = [
@@ -127,22 +129,11 @@ const MapView = () => {
 
       {/* Map/List Content */}
       {viewMode === "map" ? (
-        <Card className="h-96">
-          <CardContent className="p-0 h-full">
-            <div className="h-full bg-muted rounded-lg flex items-center justify-center border-2 border-dashed border-border">
-              <div className="text-center">
-                <MapPin className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-foreground mb-2">Mappa interattiva</h3>
-                <p className="text-muted-foreground text-sm mb-4">
-                  Vista geografica dei servizi disponibili per zona
-                </p>
-                <div className="text-xs text-muted-foreground">
-                  Modalità demo - {filteredLocations.length} servizi trovati
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <InteractiveMap 
+          locations={filteredLocations}
+          selectedLocation={selectedLocation}
+          onLocationSelect={setSelectedLocation}
+        />
       ) : (
         <div className="grid gap-4">
           {filteredLocations.map(location => (
@@ -166,7 +157,14 @@ const MapView = () => {
                     ))}
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Button size="sm" variant="outline">
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => {
+                        setSelectedLocation(location);
+                        setViewMode("map");
+                      }}
+                    >
                       <MapPin className="h-3 w-3 mr-1" />
                       Visualizza su mappa
                     </Button>
