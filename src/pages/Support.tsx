@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Phone, Mail, MessageCircle, HelpCircle, FileText, Users } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Phone, Mail, MessageCircle, HelpCircle, FileText, Users, Sparkles } from "lucide-react";
+import ContentCardGenerator from "@/components/ContentCardGenerator";
 
 const Support = () => {
   const contacts = [
@@ -61,7 +63,24 @@ const Support = () => {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <Tabs defaultValue="generator" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="generator" className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4" />
+              Generatore AI
+            </TabsTrigger>
+            <TabsTrigger value="support" className="flex items-center gap-2">
+              <MessageCircle className="h-4 w-4" />
+              Supporto Tradizionale
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="generator" className="mt-6">
+            <ContentCardGenerator />
+          </TabsContent>
+
+          <TabsContent value="support" className="mt-6">
+            <div className="grid lg:grid-cols-3 gap-8">
           {/* Contact Form */}
           <div className="lg:col-span-2">
             <Card>
@@ -235,7 +254,9 @@ const Support = () => {
               </CardContent>
             </Card>
           </div>
-        </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );
