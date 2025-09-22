@@ -23,18 +23,29 @@ interface GeneratedCard {
 
 const ContentCardGenerator = () => {
   const [prompt, setPrompt] = useState("");
+  const [url, setUrl] = useState("");
   const [activityType, setActivityType] = useState("");
   const [targetAge, setTargetAge] = useState("");
   const [location, setLocation] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [useUrl, setUseUrl] = useState(false);
   const [generatedCard, setGeneratedCard] = useState<GeneratedCard | null>(null);
   const { toast } = useToast();
 
   const handleGenerate = async () => {
-    if (!prompt.trim()) {
+    if (!useUrl && !prompt.trim()) {
       toast({
         title: "Errore",
         description: "Inserisci una descrizione per l'attività",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (useUrl && !url.trim()) {
+      toast({
+        title: "Errore",
+        description: "Inserisci un URL valido",
         variant: "destructive",
       });
       return;
@@ -44,7 +55,8 @@ const ContentCardGenerator = () => {
     try {
       const { data, error } = await supabase.functions.invoke('generate-content-card', {
         body: {
-          prompt: prompt.trim(),
+          prompt: useUrl ? "" : prompt.trim(),
+          url: useUrl ? url.trim() : "",
           activityType,
           targetAge,
           location,
@@ -72,10 +84,12 @@ const ContentCardGenerator = () => {
 
   const resetForm = () => {
     setPrompt("");
+    setUrl("");
     setActivityType("");
     setTargetAge("");
     setLocation("");
     setGeneratedCard(null);
+    setUseUrl(false);
   };
 
   return (
@@ -91,17 +105,55 @@ const ContentCardGenerator = () => {
           </p>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div>
-            <Label htmlFor="prompt">Descrizione Attività *</Label>
-            <Textarea
-              id="prompt"
-              placeholder="Es: Laboratorio di cucina interculturale per far conoscere le tradizioni culinarie dei paesi d'origine degli studenti..."
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              rows={3}
-              className="mt-1"
-            />
+          <div className="flex items-center space-x-4 mb-4">
+            <label className="flex items-center space-x-2">
+              <input
+                type="radio"
+                checked={!useUrl}
+                onChange={() => setUseUrl(false)}
+                className="text-primary"
+              />
+              <span className="text-sm font-medium">Descrivi l'attività</span>
+            </label>
+            <label className="flex items-center space-x-2">
+              <input
+                type="radio"
+                checked={useUrl}
+                onChange={() => setUseUrl(true)}
+                className="text-primary"
+              />
+              <span className="text-sm font-medium">Importa da URL</span>
+            </label>
           </div>
+
+          {!useUrl ? (
+            <div>
+              <Label htmlFor="prompt">Descrizione Attività *</Label>
+              <Textarea
+                id="prompt"
+                placeholder="Es: Laboratorio di cucina interculturale per far conoscere le tradizioni culinarie dei paesi d'origine degli studenti..."
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                rows={3}
+                className="mt-1"
+              />
+            </div>
+          ) : (
+            <div>
+              <Label htmlFor="url">URL Contenuto *</Label>
+              <Input
+                id="url"
+                type="url"
+                placeholder="https://example.com/articolo-attivita"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                className="mt-1"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Inserisci l'URL di una pagina web con i dettagli dell'attività
+              </p>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>

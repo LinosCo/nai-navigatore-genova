@@ -15,13 +15,41 @@ serve(async (req) => {
   }
 
   try {
-    const { prompt, activityType, targetAge, location } = await req.json();
+    const { prompt, activityType, targetAge, location, url } = await req.json();
 
-    if (!prompt) {
-      throw new Error('Prompt è richiesto');
+    if (!prompt && !url) {
+      throw new Error('Prompt o URL è richiesto');
     }
 
-    console.log('Generating content card for:', { prompt, activityType, targetAge, location });
+    console.log('Generating content card for:', { prompt, activityType, targetAge, location, url });
+
+    let contentToAnalyze = prompt;
+
+    // Se è stato fornito un URL, estrai il contenuto
+    if (url) {
+      try {
+        console.log('Fetching content from URL:', url);
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error('Impossibile accedere all\'URL fornito');
+        }
+        const html = await response.text();
+        
+        // Estrai testo dalla pagina HTML (versione semplificata)
+        const textContent = html
+          .replace(/<script[^>]*>.*?<\/script>/gis, '')
+          .replace(/<style[^>]*>.*?<\/style>/gis, '')
+          .replace(/<[^>]*>/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+        
+        contentToAnalyze = textContent.substring(0, 2000); // Limita la lunghezza
+        console.log('Extracted content length:', contentToAnalyze.length);
+      } catch (error) {
+        console.error('Error fetching URL content:', error);
+        throw new Error('Errore nel recupero del contenuto dall\'URL');
+      }
+    }
 
     const systemPrompt = `Sei un assistente esperto nell'educazione interculturale per la piattaforma NEIP di Genova. 
     Crea schede dettagliate per attività educative rivolte a studenti NAI (Nuovi Arrivati in Italia).
@@ -54,12 +82,17 @@ serve(async (req) => {
         model: 'gpt-4o-mini',
         messages: [
           { role: 'system', content: systemPrompt },
-          { 
+        { 
             role: 'user', 
-            content: `Crea una scheda per: ${prompt}. 
-            Tipo attività: ${activityType || 'non specificato'}. 
-            Età target: ${targetAge || 'non specificata'}. 
-            Area Genova: ${location || 'centro città'}.` 
+            content: url 
+              ? `Analizza questo contenuto web e crea una scheda attività educativa per studenti NAI: ${contentToAnalyze}. 
+                 Tipo attività: ${activityType || 'ricava dal contenuto'}. 
+                 Età target: ${targetAge || 'ricava dal contenuto'}. 
+                 Area Genova: ${location || 'centro città'}.`
+              : `Crea una scheda per: ${prompt}. 
+                 Tipo attività: ${activityType || 'non specificato'}. 
+                 Età target: ${targetAge || 'non specificata'}. 
+                 Area Genova: ${location || 'centro città'}.` 
           }
         ],
         max_tokens: 1000,
