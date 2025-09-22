@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Heart, MapPin, Calendar, Users, Phone, ExternalLink, BookOpen, Trash2 } from "lucide-react";
+import { Heart, MapPin, Calendar, Users, Phone, ExternalLink, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -79,13 +79,6 @@ const ActivityCard = ({
     });
   };
 
-  const handleBooking = () => {
-    toast({
-      title: "Prenotazione",
-      description: "Reindirizzamento al sistema di prenotazione...",
-      duration: 3000,
-    });
-  };
 
   const handleDelete = async () => {
     if (!id) return;
@@ -223,25 +216,15 @@ const ActivityCard = ({
       </CardContent>
 
       <CardFooter className="pt-0 space-y-2">
-        <div className="grid grid-cols-2 gap-2 w-full">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={handleContact}
-            className="text-xs"
-          >
-            <Phone className="h-3 w-3 mr-1" />
-            Contatta
-          </Button>
-          <Button 
-            size="sm" 
-            onClick={handleBooking}
-            className="text-xs"
-          >
-            <BookOpen className="h-3 w-3 mr-1" />
-            Prenota
-          </Button>
-        </div>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={handleContact}
+          className="text-xs w-full"
+        >
+          <Phone className="h-3 w-3 mr-1" />
+          Contatta
+        </Button>
         
         <Button variant="ghost" size="sm" className="w-full text-xs">
           <ExternalLink className="h-3 w-3 mr-1" />

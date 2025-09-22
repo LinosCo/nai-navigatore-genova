@@ -38,8 +38,8 @@ const Support = () => {
 
   const faqItems = [
     {
-      question: "Come posso prenotare un corso L2 per i miei studenti?",
-      answer: "Usa la funzione di ricerca per trovare corsi nella tua zona, poi clicca su 'Prenota' nella scheda del corso."
+      question: "Come posso contattare un'organizzazione per i miei studenti?",
+      answer: "Usa la funzione di ricerca per trovare iniziative nella tua zona, poi clicca su 'Contatta' nella scheda dell'attività."
     },
     {
       question: "È possibile richiedere un mediatore culturale per i colloqui?",

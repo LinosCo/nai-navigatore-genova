@@ -113,7 +113,7 @@ const Activities = () => {
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-foreground">0</div>
-                  <div className="text-sm text-muted-foreground">Prenotazioni attive</div>
+                  <div className="text-sm text-muted-foreground">Attività salvate</div>
                 </div>
               </div>
             </CardContent>
