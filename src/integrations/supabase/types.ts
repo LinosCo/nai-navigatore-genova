@@ -59,6 +59,7 @@ export type Database = {
           nai_benefits: string | null
           organization: string
           participants: string
+          published: boolean
           source_url: string | null
           title: string
           type: string
@@ -78,6 +79,7 @@ export type Database = {
           nai_benefits?: string | null
           organization: string
           participants: string
+          published?: boolean
           source_url?: string | null
           title: string
           type: string
@@ -97,6 +99,7 @@ export type Database = {
           nai_benefits?: string | null
           organization?: string
           participants?: string
+          published?: boolean
           source_url?: string | null
           title?: string
           type?: string
