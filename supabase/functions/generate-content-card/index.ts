@@ -75,6 +75,12 @@ serve(async (req) => {
     - Se analizzi un URL: mantieni la descrizione originale dell'evento e aggiungi analisi benefici separata
     - Se generi da prompt: crea descrizione completa personalizzata per NAI
     
+    CLASSIFICAZIONE RIGOROSA DEI TIPI:
+    - "l2": Corsi di lingua italiana, laboratori linguistici, supporto didattico linguistico
+    - "cultura": Eventi culturali, visite musei, laboratori artistici, attività di scoperta del territorio
+    - "social": Supporto sociale, orientamento servizi, mediazione culturale, supporto famiglie
+    - "sport": Attività sportive, ricreative, motorie, giochi di squadra
+    
     Genera una risposta in formato JSON con questa struttura ESATTA:
     {
       "title": "Titolo dell'attività (se da URL: mantieni originale, se da prompt: crea per NAI)",
@@ -91,12 +97,14 @@ serve(async (req) => {
       "longitude": numero decimale preciso per Genova
     }
     
-    REQUISITI CRITICI:
+    REQUISITI CRITICI PER LA CLASSIFICAZIONE:
+    - TYPE: DEVE essere esattamente uno dei 4 valori: "l2", "cultura", "social", "sport"
+    - Analizza attentamente il contenuto per scegliere il tipo più appropriato
+    - Se hai dubbi, usa questa priorità: lingua italiana = l2, eventi culturali = cultura, supporto/orientamento = social, attività motorie = sport
     - DESCRIPTION: Se da URL = testo originale pulito senza HTML. Se da prompt = descrizione completa per NAI
     - NAI_BENEFITS: Sempre presente, analisi educativa specifica per target NAI
     - LOCATION: Nome luogo + indirizzo completo separati da virgola  
     - COORDINATES: Sempre coordinate GPS reali e verificate di Genova
-    - TYPE: Deve essere uno dei 4 valori: l2, cultura, social, sport
     
     ANALISI BENEFICI NAI - Considera sempre:
     - Opportunità di pratica linguistica italiana in contesto reale
@@ -183,6 +191,13 @@ serve(async (req) => {
           .trim();
       }
       
+      
+      // Validazione e pulizia del tipo
+      if (contentCard.type && !['l2', 'cultura', 'social', 'sport'].includes(contentCard.type)) {
+        console.log(`Invalid type detected: ${contentCard.type}, defaulting to 'cultura'`);
+        contentCard.type = 'cultura';
+      }
+      
       // Assicurati che le coordinate siano numeri
       if (contentCard.latitude && typeof contentCard.latitude === 'string') {
         contentCard.latitude = parseFloat(contentCard.latitude);
@@ -194,6 +209,11 @@ serve(async (req) => {
       // Se non c'è address, usa location
       if (!contentCard.address && contentCard.location) {
         contentCard.address = contentCard.location;
+      }
+      
+      // Assicurati che nai_benefits esista sempre
+      if (!contentCard.nai_benefits) {
+        contentCard.nai_benefits = "Questa attività offre opportunità di integrazione sociale e linguistica per studenti NAI attraverso l'interazione con coetanei e l'apprendimento di competenze utili in un ambiente inclusivo.";
       }
       
     } catch (e) {
@@ -208,7 +228,7 @@ serve(async (req) => {
         date: new Date().toLocaleDateString('it-IT'),
         participants: "10-15 studenti",
         contact: "info@neip.genova.it",
-        type: activityType || "cultura",
+        type: (activityType && ['l2', 'cultura', 'social', 'sport'].includes(activityType)) ? activityType : "cultura",
         organization: "NEIP Genova",
         latitude: 44.4063,
         longitude: 8.9241

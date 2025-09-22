@@ -11,11 +11,12 @@ interface Initiative {
   id: string;
   title: string;
   description: string;
+  nai_benefits?: string;
   location: string;
   date: string;
   participants: string;
   contact: string;
-  type: string;
+  type: "l2" | "cultura" | "social" | "sport";
   organization: string;
   latitude?: number;
   longitude?: number;
@@ -63,7 +64,10 @@ const MapView = () => {
         return;
       }
 
-      setInitiatives(initiativesData || []);
+      setInitiatives((initiativesData || []).map(item => ({
+        ...item,
+        type: item.type as "l2" | "cultura" | "social" | "sport"
+      })));
       
       // Convert initiatives to map locations with complete data
       const mapLocations: Location[] = (initiativesData || [])

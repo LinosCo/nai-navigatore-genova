@@ -153,11 +153,12 @@ const Activities = () => {
                     id={initiative.id}
                     title={initiative.title}
                     description={initiative.description}
+                    nai_benefits={initiative.nai_benefits}
                     location={initiative.location}
                     date={initiative.date}
                     participants={initiative.participants}
                     contact={initiative.contact}
-                    type={initiative.type}
+                    type={initiative.type as "l2" | "cultura" | "social" | "sport"}
                     organization={initiative.organization}
                     latitude={initiative.latitude || undefined}
                     longitude={initiative.longitude || undefined}
