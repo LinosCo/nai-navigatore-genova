@@ -121,10 +121,10 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       // Create popup
       const popup = new mapboxgl.Popup({
         offset: 25,
-        closeButton: false,
+        closeButton: true,
+        closeOnClick: false,
         className: 'mapbox-popup'
       })
-        .setLngLat([location.coordinates.lng, location.coordinates.lat])
         .setHTML(`
         <div class="p-4 min-w-[250px] max-w-[320px]">
           <h3 class="font-semibold text-lg mb-3 text-gray-900 leading-tight">${location.name}</h3>
@@ -171,8 +171,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
         </div>
       `);
 
+      marker.setPopup(popup);
       markerElement.addEventListener('click', () => {
-        popup.addTo(map.current!);
         if (onLocationSelect) {
           onLocationSelect(location);
         }
