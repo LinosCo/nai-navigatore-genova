@@ -172,10 +172,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       `);
 
       marker.setPopup(popup);
-      markerElement.addEventListener('click', () => {
-        if (onLocationSelect) {
-          onLocationSelect(location);
-        }
+      // Ensure popup opens on marker click
+      markerElement.addEventListener('click', (e) => {
+        e.stopPropagation();
+        marker.togglePopup();
+        onLocationSelect?.(location);
       });
 
       markers.current.push(marker);
