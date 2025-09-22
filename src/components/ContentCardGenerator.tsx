@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, Sparkles, FileText } from "lucide-react";
+import { Loader2, Sparkles, FileText, Save } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import ActivityCard from "./ActivityCard";
@@ -30,6 +30,7 @@ const ContentCardGenerator = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [useUrl, setUseUrl] = useState(false);
   const [generatedCard, setGeneratedCard] = useState<GeneratedCard | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
 
   const handleGenerate = async () => {
@@ -90,6 +91,58 @@ const ContentCardGenerator = () => {
     setLocation("");
     setGeneratedCard(null);
     setUseUrl(false);
+  };
+
+  const handleSaveInitiative = async () => {
+    if (!generatedCard) return;
+
+    setIsSaving(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast({
+          title: "Errore",
+          description: "Devi essere autenticato per salvare un'iniziativa",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const { error } = await supabase
+        .from('initiatives')
+        .insert({
+          title: generatedCard.title,
+          description: generatedCard.description,
+          location: generatedCard.location,
+          date: generatedCard.date,
+          participants: generatedCard.participants,
+          contact: generatedCard.contact,
+          type: generatedCard.type,
+          organization: generatedCard.organization,
+          created_by: user.id,
+          is_generated: true,
+          source_url: useUrl ? url : null,
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Successo!",
+        description: "Iniziativa salvata tra le attività disponibili",
+      });
+
+      resetForm();
+    } catch (error) {
+      console.error('Error saving initiative:', error);
+      toast({
+        title: "Errore",
+        description: "Errore nel salvataggio dell'iniziativa",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -218,8 +271,23 @@ const ContentCardGenerator = () => {
       </Card>
 
       {generatedCard && (
-        <div>
-          <h3 className="text-lg font-semibold mb-4">Scheda Generata</h3>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold">Scheda Generata</h3>
+            <Button onClick={handleSaveInitiative} disabled={isSaving}>
+              {isSaving ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Salvando...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4 mr-2" />
+                  Salva tra le Iniziative
+                </>
+              )}
+            </Button>
+          </div>
           <ActivityCard
             title={generatedCard.title}
             description={generatedCard.description}

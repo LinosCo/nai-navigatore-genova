@@ -1,24 +1,42 @@
+import { useEffect, useState } from "react";
 import Navigation from "@/components/Navigation";
 import ActivityCard from "@/components/ActivityCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Heart, Calendar, Filter } from "lucide-react";
+import { Heart, Calendar, Filter, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Activities = () => {
-  const savedActivities = [
-    {
-      title: "Laboratorio di Teatro Interculturale",
-      description: "Attività teatrale per favorire l'integrazione e l'espressione creativa degli studenti NAI attraverso la drammatizzazione.",
-      location: "Teatro della Gioventù - Centro Storico",
-      date: "Martedì 16:30-18:30",
-      participants: "8-20 anni",
-      contact: "info@teatrogiovani.it",
-      type: "cultura" as const,
-      organization: "Teatro della Gioventù",
-      isSaved: true
+  const [initiatives, setInitiatives] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetchInitiatives();
+  }, []);
+
+  const fetchInitiatives = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('initiatives')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setInitiatives(data || []);
+    } catch (error) {
+      console.error('Error fetching initiatives:', error);
+      toast({
+        title: "Errore",
+        description: "Errore nel caricamento delle iniziative",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
   const recentlyViewed = [
     {
@@ -67,9 +85,9 @@ const Activities = () => {
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-foreground">
-                    {savedActivities.length}
+                    {initiatives.length}
                   </div>
-                  <div className="text-sm text-muted-foreground">Attività salvate</div>
+                  <div className="text-sm text-muted-foreground">Iniziative totali</div>
                 </div>
               </div>
             </CardContent>
@@ -104,17 +122,40 @@ const Activities = () => {
           </Card>
         </div>
 
-        {/* Saved Activities */}
+        {/* All Initiatives */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-foreground">Attività salvate</h2>
-            <Badge variant="secondary">{savedActivities.length}</Badge>
+            <h2 className="text-xl font-semibold text-foreground">Tutte le iniziative</h2>
+            <Badge variant="secondary">{initiatives.length}</Badge>
           </div>
           
-          {savedActivities.length > 0 ? (
+          {loading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </div>
+          ) : initiatives.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {savedActivities.map((activity, index) => (
-                <ActivityCard key={index} {...activity} />
+              {initiatives.map((initiative) => (
+                <div key={initiative.id} className="relative">
+                  <ActivityCard
+                    title={initiative.title}
+                    description={initiative.description}
+                    location={initiative.location}
+                    date={initiative.date}
+                    participants={initiative.participants}
+                    contact={initiative.contact}
+                    type={initiative.type}
+                    organization={initiative.organization}
+                  />
+                  {initiative.is_generated && (
+                    <Badge 
+                      variant="outline" 
+                      className="absolute top-2 right-2 bg-primary/10 text-primary border-primary"
+                    >
+                      AI Generated
+                    </Badge>
+                  )}
+                </div>
               ))}
             </div>
           ) : (
@@ -122,12 +163,14 @@ const Activities = () => {
               <CardContent className="text-center py-12">
                 <Heart className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-foreground mb-2">
-                  Nessuna attività salvata
+                  Nessuna iniziativa trovata
                 </h3>
                 <p className="text-muted-foreground mb-4">
-                  Salva le attività che ti interessano per trovarle facilmente qui
+                  Usa il generatore AI per creare le prime iniziative
                 </p>
-                <Button>Esplora attività</Button>
+                <Button onClick={() => window.location.href = '/supporto'}>
+                  Vai al Generatore
+                </Button>
               </CardContent>
             </Card>
           )}
