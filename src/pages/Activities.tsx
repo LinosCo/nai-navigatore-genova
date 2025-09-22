@@ -72,30 +72,7 @@ const Activities = () => {
     }
   };
 
-  const recentlyViewed = [
-    {
-      title: "Corso di Italiano L2 - Livello A1",
-      description: "Corso base di lingua italiana per studenti stranieri.",
-      location: "Via XXV Aprile, 12 - Sampierdarena",
-      date: "Lun-Mer-Ven 14:00-16:00",
-      participants: "Max 15 studenti",
-      contact: "Tel: 010-1234567",
-      type: "l2" as const,
-      organization: "Centro Interculturale",
-      isSaved: false
-    },
-    {
-      title: "Supporto Scolastico e Orientamento",
-      description: "Servizio di supporto per l'inserimento scolastico di studenti stranieri.",
-      location: "Via del Campo, 91 - Centro Ovest",
-      date: "Lun-Ven 9:00-17:00",
-      participants: "Famiglie e studenti",
-      contact: "Tel: 010-5577123",
-      type: "social" as const,
-      organization: "Servizi Sociali",
-      isSaved: false
-    }
-  ];
+  // Rimuovi i dati demo - la sezione "Recently Viewed" sarà implementata successivamente
 
   return (
     <AuthGuard>
@@ -135,7 +112,7 @@ const Activities = () => {
                   <Calendar className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-foreground">5</div>
+                  <div className="text-2xl font-bold text-foreground">0</div>
                   <div className="text-sm text-muted-foreground">Prenotazioni attive</div>
                 </div>
               </div>
@@ -149,7 +126,7 @@ const Activities = () => {
                   <Filter className="h-5 w-5 text-secondary" />
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-foreground">12</div>
+                  <div className="text-2xl font-bold text-foreground">0</div>
                   <div className="text-sm text-muted-foreground">Ricerche questo mese</div>
                 </div>
               </div>
@@ -217,16 +194,6 @@ const Activities = () => {
               </CardContent>
             </Card>
           )}
-        </div>
-
-        {/* Recently Viewed */}
-        <div>
-          <h2 className="text-xl font-semibold text-foreground mb-4">Visualizzate di recente</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {recentlyViewed.map((activity, index) => (
-              <ActivityCard key={index} {...activity} />
-            ))}
-          </div>
         </div>
       </main>
 

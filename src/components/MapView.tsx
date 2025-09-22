@@ -237,8 +237,18 @@ const MapView = () => {
             </Card>
           ))}
           {!loading && filteredLocations.length === 0 && (
-            <div className="text-center py-8 text-muted-foreground">
-              Nessuna iniziativa trovata con i filtri selezionati
+            <div className="text-center py-12">
+              <div className="max-w-md mx-auto">
+                <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                  <MapPin className="h-8 w-8 text-muted-foreground" />
+                </div>
+                <h3 className="text-lg font-semibold text-foreground mb-2">
+                  Nessuna iniziativa sulla mappa
+                </h3>
+                <p className="text-muted-foreground">
+                  Non ci sono ancora iniziative con coordinate geografiche da visualizzare sulla mappa territoriale.
+                </p>
+              </div>
             </div>
           )}
         </div>
