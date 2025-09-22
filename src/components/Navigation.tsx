@@ -23,7 +23,7 @@ const Navigation = () => {
     {
       to: "/",
       icon: Search,
-      label: "Cerca iniziative",
+      label: "Tutte le iniziative",
       description: "Trova attività e servizi"
     },
     {

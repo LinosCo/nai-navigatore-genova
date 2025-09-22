@@ -55,7 +55,7 @@ const SearchSection = ({ onSearch }: SearchSectionProps) => {
           {/* Hero Section */}
           <div className="text-center">
             <h1 className="text-3xl font-bold text-foreground mb-2">
-              Trova iniziative per studenti NAI
+              Tutte le iniziative per studenti NAI
             </h1>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               Scopri corsi di lingua, attività culturali, servizi sociali e opportunità sportive 
