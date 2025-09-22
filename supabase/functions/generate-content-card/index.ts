@@ -63,14 +63,19 @@ serve(async (req) => {
       "participants": "Numero partecipanti suggerito",
       "contact": "Contatto di riferimento",
       "type": "l2|cultura|social|sport",
-      "organization": "Nome organizzazione"
+      "organization": "Nome organizzazione",
+      "latitude": "Latitudine precisa del luogo (numero decimale)",
+      "longitude": "Longitudine precisa del luogo (numero decimale)"
     }
     
     Considera sempre:
     - Attività appropriate per studenti NAI
-    - Luoghi reali a Genova
+    - Luoghi reali a Genova con coordinate GPS precise
     - Obiettivi di integrazione e apprendimento linguistico
-    - Accessibilità e inclusività`;
+    - Accessibilità e inclusività
+    
+    IMPORTANTE: Fornisci sempre coordinate geografiche precise per Genova e zone limitrofe.
+    Coordinate di riferimento per Genova centro: lat: 44.4063, lng: 8.9241`;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -125,7 +130,9 @@ serve(async (req) => {
         participants: "10-15 studenti",
         contact: "info@neip.genova.it",
         type: activityType || "cultura",
-        organization: "NEIP Genova"
+        organization: "NEIP Genova",
+        latitude: 44.4063,
+        longitude: 8.9241
       };
     }
 

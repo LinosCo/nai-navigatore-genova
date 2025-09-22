@@ -22,6 +22,8 @@ interface GeneratedCard {
   contact: string;
   type: "l2" | "cultura" | "social" | "sport";
   organization: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 const ContentCardGenerator = () => {
@@ -195,6 +197,8 @@ const ContentCardGenerator = () => {
           contact: editableCard.contact,
           type: editableCard.type,
           organization: editableCard.organization,
+          latitude: editableCard.latitude || null,
+          longitude: editableCard.longitude || null,
           created_by: user.id,
           is_generated: true,
           source_url: mode === 'url' ? url : null,

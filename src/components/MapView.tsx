@@ -1,57 +1,110 @@
-import { useState } from "react";
-import { MapPin, Filter, List, Grid } from "lucide-react";
+import { useState, useEffect } from "react";
+import { MapPin, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import InteractiveMap from "@/components/InteractiveMap";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
-// Mock data for demonstration
-const mockLocations = [
-  {
-    id: 1,
-    name: "Centro Interculturale Sampierdarena",
-    type: "l2",
-    address: "Via XXV Aprile, 12",
-    district: "Sampierdarena",
-    services: ["Corsi L2", "Mediazione culturale"],
-    coordinates: { lat: 44.4254, lng: 8.8924 }
-  },
-  {
-    id: 2,
-    name: "Biblioteca Civica Berio",
-    type: "cultura",
-    address: "Via del Seminario, 16",
-    district: "Centro Storico",
-    services: ["Laboratori lettura", "Supporto compiti"],
-    coordinates: { lat: 44.4056, lng: 8.9463 }
-  },
-  {
-    id: 3,
-    name: "Centro Sportivo Comunale",
-    type: "sport",
-    address: "Via Canevari, 28",
-    district: "Sampierdarena",
-    services: ["Calcio", "Pallavolo", "Attività inclusive"],
-    coordinates: { lat: 44.4189, lng: 8.8856 }
-  },
-  {
-    id: 4,
-    name: "Servizi Sociali Municipio II",
-    type: "social",
-    address: "Via del Campo, 91",
-    district: "Centro Ovest",
-    services: ["Assistenza famiglie", "Orientamento servizi"],
-    coordinates: { lat: 44.4098, lng: 8.9234 }
-  }
-];
+interface Initiative {
+  id: string;
+  title: string;
+  description: string;
+  location: string;
+  date: string;
+  participants: string;
+  contact: string;
+  type: string;
+  organization: string;
+  latitude?: number;
+  longitude?: number;
+}
+
+interface Location {
+  id: string;
+  name: string;
+  type: string;
+  address: string;
+  district: string;
+  services: string[];
+  coordinates: { lat: number; lng: number };
+}
 
 const MapView = () => {
+  const [initiatives, setInitiatives] = useState<Initiative[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedDistrict, setSelectedDistrict] = useState<string>("all");
   const [selectedType, setSelectedType] = useState<string>("all");
   const [viewMode, setViewMode] = useState<"map" | "list">("map");
-  const [selectedLocation, setSelectedLocation] = useState<typeof mockLocations[0] | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
+  const { toast } = useToast();
 
-  const districts = ["all", "Sampierdarena", "Centro Storico", "Centro Ovest", "Valpolcevera"];
+  useEffect(() => {
+    fetchInitiatives();
+  }, []);
+
+  const fetchInitiatives = async () => {
+    try {
+      setLoading(true);
+      const { data: initiativesData, error } = await supabase
+        .from('initiatives')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching initiatives:', error);
+        toast({
+          title: "Errore",
+          description: "Impossibile caricare le iniziative",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setInitiatives(initiativesData || []);
+      
+      // Convert initiatives to map locations
+      const mapLocations: Location[] = (initiativesData || [])
+        .filter(initiative => initiative.latitude && initiative.longitude)
+        .map(initiative => ({
+          id: initiative.id,
+          name: initiative.title,
+          type: initiative.type,
+          address: initiative.location,
+          district: getDistrictFromLocation(initiative.location),
+          services: [initiative.organization],
+          coordinates: { 
+            lat: initiative.latitude!, 
+            lng: initiative.longitude! 
+          }
+        }));
+
+      setLocations(mapLocations);
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: "Errore",
+        description: "Errore di connessione",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getDistrictFromLocation = (location: string): string => {
+    // Simple logic to extract district from location string
+    const districts = ["Centro Storico", "Valpolcevera", "Ponente", "Val Bisagno", "Levante", "Sampierdarena", "Centro Ovest"];
+    const found = districts.find(district => 
+      location.toLowerCase().includes(district.toLowerCase()) ||
+      location.toLowerCase().includes(district.toLowerCase().replace(/\s/g, ''))
+    );
+    return found || "Centro Storico";
+  };
+
+  const districts = ["all", "Centro Storico", "Valpolcevera", "Ponente", "Val Bisagno", "Levante", "Sampierdarena", "Centro Ovest"];
   const serviceTypes = [
     { id: "all", label: "Tutti i servizi", color: "bg-muted" },
     { id: "l2", label: "Corsi L2", color: "bg-primary" },
@@ -60,7 +113,7 @@ const MapView = () => {
     { id: "sport", label: "Sport", color: "bg-success" }
   ];
 
-  const filteredLocations = mockLocations.filter(location => {
+  const filteredLocations = locations.filter(location => {
     const districtMatch = selectedDistrict === "all" || location.district === selectedDistrict;
     const typeMatch = selectedType === "all" || location.type === selectedType;
     return districtMatch && typeMatch;
@@ -73,6 +126,7 @@ const MapView = () => {
         <div>
           <h1 className="text-2xl font-semibold text-foreground">Mappa territoriale</h1>
           <p className="text-muted-foreground">Servizi e iniziative per studenti NAI a Genova</p>
+          {loading && <p className="text-sm text-muted-foreground">Caricamento iniziative...</p>}
         </div>
         
         <div className="flex items-center space-x-2">
@@ -176,6 +230,11 @@ const MapView = () => {
               </CardContent>
             </Card>
           ))}
+          {!loading && filteredLocations.length === 0 && (
+            <div className="text-center py-8 text-muted-foreground">
+              Nessuna iniziativa trovata con i filtri selezionati
+            </div>
+          )}
         </div>
       )}
 

@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { MapPin } from 'lucide-react';
 
 interface Location {
-  id: number;
+  id: string;
   name: string;
   type: string;
   address: string;

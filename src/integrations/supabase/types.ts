@@ -23,7 +23,9 @@ export type Database = {
           description: string
           id: string
           is_generated: boolean | null
+          latitude: number | null
           location: string
+          longitude: number | null
           organization: string
           participants: string
           source_url: string | null
@@ -39,7 +41,9 @@ export type Database = {
           description: string
           id?: string
           is_generated?: boolean | null
+          latitude?: number | null
           location: string
+          longitude?: number | null
           organization: string
           participants: string
           source_url?: string | null
@@ -55,7 +59,9 @@ export type Database = {
           description?: string
           id?: string
           is_generated?: boolean | null
+          latitude?: number | null
           location?: string
+          longitude?: number | null
           organization?: string
           participants?: string
           source_url?: string | null
