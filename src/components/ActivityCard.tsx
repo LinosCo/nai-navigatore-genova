@@ -13,6 +13,7 @@ interface ActivityCardProps {
   id?: string;
   title: string;
   description: string;
+  nai_benefits?: string;
   location: string;
   address?: string;
   date: string;
@@ -34,6 +35,7 @@ const ActivityCard = ({
   id,
   title,
   description,
+  nai_benefits,
   location,
   address,
   date,
@@ -169,6 +171,18 @@ const ActivityCard = ({
         <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
           {description.replace(/<[^>]*>/g, '').replace(/&[a-zA-Z0-9#]+;/g, ' ').replace(/\s+/g, ' ').trim()}
         </p>
+
+        {/* NAI Benefits Box */}
+        {nai_benefits && (
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-3 rounded-lg border border-blue-200 dark:border-blue-800">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-blue-600 dark:text-blue-400 font-medium text-xs">💡 Benefici per studenti NAI</span>
+            </div>
+            <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
+              {nai_benefits.replace(/<[^>]*>/g, '').replace(/&[a-zA-Z0-9#]+;/g, ' ').replace(/\s+/g, ' ').trim()}
+            </p>
+          </div>
+        )}
 
         <div className="space-y-2">
           <div className="flex items-start text-xs text-muted-foreground">

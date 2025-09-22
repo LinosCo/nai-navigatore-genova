@@ -16,6 +16,7 @@ import { useAuth } from "@/hooks/useAuth";
 interface GeneratedCard {
   title: string;
   description: string;
+  nai_benefits?: string;
   location: string;
   address?: string;
   date: string;
@@ -429,6 +430,25 @@ const ContentCardGenerator = () => {
                 />
               </div>
 
+              {editableCard.nai_benefits && (
+                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+                  <Label htmlFor="edit-nai-benefits" className="text-blue-900 dark:text-blue-100 font-medium">
+                    💡 Benefici per studenti NAI
+                  </Label>
+                  <Textarea
+                    id="edit-nai-benefits"
+                    value={editableCard.nai_benefits}
+                    onChange={(e) => setEditableCard({ ...editableCard, nai_benefits: e.target.value })}
+                    rows={3}
+                    className="mt-2 bg-blue-50/50 dark:bg-blue-900/10 border-blue-200 dark:border-blue-700"
+                    placeholder="Analisi dei benefici specifici per l'integrazione e l'apprendimento degli studenti NAI..."
+                  />
+                  <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
+                    Questo campo contiene l'analisi pedagogica specifica per studenti NAI
+                  </p>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="edit-location">Luogo</Label>
@@ -553,6 +573,7 @@ const ContentCardGenerator = () => {
             <ActivityCard
               title={editableCard.title}
               description={editableCard.description}
+              nai_benefits={editableCard.nai_benefits}
               location={editableCard.location}
               address={editableCard.address}
               date={editableCard.date}
