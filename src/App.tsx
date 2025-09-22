@@ -9,6 +9,7 @@ import Activities from "./pages/Activities";
 import Map from "./pages/Map";
 import Support from "./pages/Support";
 import Auth from "./pages/Auth";
+import AdminSettings from "./pages/AdminSettings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/mappa" element={<Map />} />
             <Route path="/supporto" element={<Support />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/admin" element={<AdminSettings />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

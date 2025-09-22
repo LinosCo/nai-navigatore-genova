@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Search, Map, BookOpen, HelpCircle, User, Bell, LogOut } from "lucide-react";
+import { Search, Map, BookOpen, HelpCircle, User, Bell, LogOut, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
+import { useUserRole } from "@/hooks/useUserRole";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +17,7 @@ import {
 const Navigation = () => {
   const [hasNotifications] = useState(true);
   const { user, signOut } = useAuth();
+  const { isAdmin } = useUserRole();
 
   const navItems = [
     {
@@ -43,6 +46,16 @@ const Navigation = () => {
     }
   ];
 
+  // Add admin nav item if user is admin
+  if (isAdmin) {
+    navItems.push({
+      to: "/admin",
+      icon: Settings,
+      label: "Admin",
+      description: "Impostazioni amministrative"
+    });
+  }
+
   return (
     <nav className="bg-card border-b border-border shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -67,7 +80,7 @@ const Navigation = () => {
                 key={item.to}
                 to={item.to}
                 className={({ isActive }) =>
-                  `px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2 group ${
+                  `px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2 group relative ${
                     isActive
                       ? "bg-primary text-primary-foreground shadow-sm"
                       : "text-muted-foreground hover:text-foreground hover:bg-nav-hover"
@@ -76,6 +89,9 @@ const Navigation = () => {
               >
                 <item.icon className="h-4 w-4" />
                 <span>{item.label}</span>
+                {item.to === "/admin" && (
+                  <Badge variant="secondary" className="text-xs ml-1">Admin</Badge>
+                )}
               </NavLink>
             ))}
           </div>
@@ -93,7 +109,12 @@ const Navigation = () => {
               <div className="flex items-center space-x-3 pl-3 border-l border-border">
                 <div className="text-right text-sm">
                   <p className="font-medium text-foreground">{user.email}</p>
-                  <p className="text-xs text-muted-foreground">Utente</p>
+                  <div className="flex items-center space-x-1">
+                    <p className="text-xs text-muted-foreground">Utente</p>
+                    {isAdmin && (
+                      <Badge variant="outline" className="text-xs">Admin</Badge>
+                    )}
+                  </div>
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -110,6 +131,17 @@ const Navigation = () => {
                       <User className="mr-2 h-4 w-4" />
                       <span>Profilo</span>
                     </DropdownMenuItem>
+                    {isAdmin && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem className="flex items-center" asChild>
+                          <NavLink to="/admin">
+                            <Settings className="mr-2 h-4 w-4" />
+                            <span>Impostazioni Admin</span>
+                          </NavLink>
+                        </DropdownMenuItem>
+                      </>
+                    )}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem 
                       className="flex items-center text-destructive" 
