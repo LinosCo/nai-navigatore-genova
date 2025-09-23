@@ -13,6 +13,14 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        titillium: ['Titillium Web', 'sans-serif'],
+        sans: ['Titillium Web', 'system-ui', 'sans-serif'],
+      },
+      spacing: {
+        '18': '4.5rem',
+        '88': '22rem',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
