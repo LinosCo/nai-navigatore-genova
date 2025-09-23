@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import Navigation from '@/components/Navigation';
 import AuthGuard from '@/components/AuthGuard';
 import { supabase } from '@/integrations/supabase/client';
-import { format, parseISO, isSameDay, startOfDay, endOfDay } from 'date-fns';
+import { format, parseISO, isSameDay, startOfDay, endOfDay, parse, isValid, isWithinInterval, endOfMonth, startOfMonth } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { MapPin, Users, Calendar as CalendarIcon } from 'lucide-react';
 
@@ -41,6 +41,22 @@ export default function Calendar() {
     }
   }, [date, initiatives]);
 
+  // Auto-seleziona una data utile che contiene iniziative (la più vicina al presente)
+  useEffect(() => {
+    if (!initiatives.length) return;
+    const dates = getInitiativeDates();
+    if (!dates.length) return;
+
+    const today = startOfDay(new Date());
+    const future = dates.filter(d => d >= today).sort((a, b) => a.getTime() - b.getTime());
+    const past = dates.filter(d => d < today).sort((a, b) => b.getTime() - a.getTime());
+    const best = future[0] || past[0];
+
+    if (best && (!date || !isSameDay(date, best))) {
+      setDate(best);
+    }
+  }, [initiatives]);
+
   const fetchInitiatives = async () => {
     try {
       setLoading(true);
@@ -63,26 +79,75 @@ export default function Calendar() {
     }
   };
 
-  const filterInitiativesByDate = (selectedDate: Date) => {
-    const filtered = initiatives.filter(initiative => {
-      try {
-        const initiativeDate = parseISO(initiative.date);
-        return isSameDay(initiativeDate, selectedDate);
-      } catch {
-        return false;
+  // Tries to parse flexible Italian date strings and ranges from the "date" text field
+  const parseInitiativeDateRange = (dateText: string): { start: Date; end?: Date } | null => {
+    if (!dateText) return null;
+    const raw = dateText.trim();
+
+    // 1) Try ISO first
+    const iso = parseISO(raw);
+    if (isValid(iso)) return { start: iso };
+
+    // 2) Try to extract dd/MM/yyyy from anywhere in the string
+    const ddmmyyyyMatch = raw.match(/(\d{1,2}\/\d{1,2}\/\d{4})/);
+    if (ddmmyyyyMatch) {
+      // Support both d/M/yyyy and dd/MM/yyyy
+      const d1 = parse(ddmmyyyyMatch[1], 'd/M/yyyy', new Date());
+      const d2 = isValid(d1) ? d1 : parse(ddmmyyyyMatch[1], 'dd/MM/yyyy', new Date());
+      if (isValid(d2)) return { start: d2 };
+    }
+
+    // 3) Handle ranges like "Giugno 2023 - Settembre 2023"
+    if (raw.includes('-')) {
+      const [left, right] = raw.split('-').map(s => s.trim());
+      const leftParsed = parse(left, 'MMMM yyyy', new Date(), { locale: it });
+      const rightParsed = parse(right, 'MMMM yyyy', new Date(), { locale: it });
+
+      if (isValid(leftParsed) && isValid(rightParsed)) {
+        const start = startOfMonth(leftParsed);
+        const end = endOfMonth(rightParsed);
+        return { start, end };
       }
+
+      // If only left is valid month-year, treat as that month
+      if (isValid(leftParsed) && !isValid(rightParsed)) {
+        const start = startOfMonth(leftParsed);
+        const end = endOfMonth(leftParsed);
+        return { start, end };
+      }
+    }
+
+    // 4) Single month-year like "Giugno 2023"
+    const monthYear = parse(raw, 'MMMM yyyy', new Date(), { locale: it });
+    if (isValid(monthYear)) {
+      return { start: startOfMonth(monthYear), end: endOfMonth(monthYear) };
+    }
+
+    return null;
+  };
+
+  const filterInitiativesByDate = (selectedDate: Date) => {
+    const dayStart = startOfDay(selectedDate);
+    const dayEnd = endOfDay(selectedDate);
+
+    const filtered = initiatives.filter(initiative => {
+      const range = parseInitiativeDateRange(initiative.date);
+      if (!range) return false;
+
+      // Exact day or within range
+      if (range.end) {
+        return isWithinInterval(selectedDate, { start: range.start, end: range.end });
+      }
+      return isSameDay(range.start, selectedDate);
     });
+
     setSelectedDateInitiatives(filtered);
   };
 
   const getInitiativeDates = () => {
-    return initiatives.map(initiative => {
-      try {
-        return parseISO(initiative.date);
-      } catch {
-        return null;
-      }
-    }).filter(Boolean) as Date[];
+    return initiatives
+      .map(initiative => parseInitiativeDateRange(initiative.date)?.start || null)
+      .filter(Boolean) as Date[];
   };
 
   const isExpired = (initiative: Initiative): boolean => {
