@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
 import AuthGuard from '@/components/AuthGuard';
 import { supabase } from '@/integrations/supabase/client';
 import { format, parseISO, isSameDay, startOfDay, endOfDay, parse, isValid, isWithinInterval, endOfMonth, startOfMonth } from 'date-fns';
@@ -172,10 +173,10 @@ export default function Calendar() {
 
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background flex flex-col">
         <Navigation />
         
-        <main className="container mx-auto px-4 py-8">
+        <main className="container mx-auto px-4 py-8 flex-1">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-foreground mb-2">
               Calendario Iniziative
@@ -314,6 +315,8 @@ export default function Calendar() {
             </div>
           </div>
         </main>
+        
+        <Footer />
       </div>
     </AuthGuard>
   );

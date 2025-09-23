@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import SearchSection from "@/components/SearchSection";
 import ActivityCard from "@/components/ActivityCard";
@@ -119,10 +120,10 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Navigation />
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
         <SearchSection onSearch={handleSearch} />
         
         {/* Results Section */}
@@ -220,6 +221,8 @@ const Index = () => {
           </div>
         )}
       </main>
+      
+      <Footer />
     </div>
   );
 };

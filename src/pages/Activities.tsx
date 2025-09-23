@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 import ActivityDetailDialog from "@/components/ActivityDetailDialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -162,10 +163,10 @@ const Activities = () => {
 
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background flex flex-col">
         <Navigation />
         
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
           <div className="mb-8">
             <h1 className="text-2xl font-semibold text-foreground mb-2">Le mie attività</h1>
             <p className="text-muted-foreground">
@@ -346,6 +347,8 @@ const Activities = () => {
           onOpenChange={setDialogOpen}
           onActivityUpdate={handleActivityUpdate}
         />
+        
+        <Footer />
       </div>
     </AuthGuard>
   );

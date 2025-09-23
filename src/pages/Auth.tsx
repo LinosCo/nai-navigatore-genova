@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -86,7 +87,8 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="min-h-screen flex flex-col bg-background">
+      <div className="flex-1 flex items-center justify-center p-6">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">Benvenuto</CardTitle>
@@ -186,6 +188,9 @@ const Auth = () => {
           </Tabs>
         </CardContent>
       </Card>
+      </div>
+      
+      <Footer />
     </div>
   );
 };
