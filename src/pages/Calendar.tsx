@@ -205,6 +205,17 @@ export default function Calendar() {
                     onSelect={setDate}
                     locale={it}
                     className="rounded-md border"
+                    modifiers={{
+                      hasEvents: getInitiativeDates()
+                    }}
+                    modifiersStyles={{
+                      hasEvents: {
+                        fontWeight: 'bold',
+                        color: 'hsl(var(--primary))',
+                        background: 'hsl(var(--primary) / 0.1)',
+                        borderRadius: '6px'
+                      }
+                    }}
                   />
                 </CardContent>
               </Card>
