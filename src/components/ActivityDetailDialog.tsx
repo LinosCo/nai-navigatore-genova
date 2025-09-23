@@ -18,6 +18,7 @@ interface Activity {
   nai_benefits?: string;
   location: string;
   date: string;
+  end_date?: string;
   participants: string;
   contact: string;
   type: "l2" | "cultura" | "social" | "sport";
@@ -65,17 +66,18 @@ const ActivityDetailDialog = ({ activity, open, onOpenChange, onActivityUpdate }
     try {
       const { data, error } = await supabase
         .from('initiatives')
-          .update({
-            title: editData.title,
-            description: editData.description,
-            nai_benefits: editData.nai_benefits,
-            location: editData.location,
-            date: editData.date,
-            participants: editData.participants,
-            contact: editData.contact,
-            type: editData.type,
-            organization: editData.organization,
-          })
+        .update({
+          title: editData.title,
+          description: editData.description,
+          nai_benefits: editData.nai_benefits,
+          location: editData.location,
+          date: editData.date,
+          end_date: editData.end_date,
+          participants: editData.participants,
+          contact: editData.contact,
+          type: editData.type,
+          organization: editData.organization,
+        })
         .eq('id', activity.id)
         .eq('created_by', user.id)
         .select()
@@ -228,6 +230,23 @@ const ActivityDetailDialog = ({ activity, open, onOpenChange, onActivityUpdate }
                   />
                 ) : (
                   <p className="text-sm mt-1">{activity.date}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="end_date">Data di Fine (opzionale)</Label>
+                {isEditing ? (
+                  <Input
+                    id="end_date"
+                    type="datetime-local"
+                    value={editData.end_date || ""}
+                    onChange={(e) => setEditData({ ...editData, end_date: e.target.value })}
+                    className="mt-1"
+                  />
+                ) : (
+                  <p className="text-sm mt-1">{activity.end_date ? new Date(activity.end_date).toLocaleString('it-IT') : 'Non definita'}</p>
                 )}
               </div>
             </div>

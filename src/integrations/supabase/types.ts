@@ -51,6 +51,7 @@ export type Database = {
           created_by: string | null
           date: string
           description: string
+          end_date: string | null
           id: string
           is_generated: boolean | null
           latitude: number | null
@@ -71,6 +72,7 @@ export type Database = {
           created_by?: string | null
           date: string
           description: string
+          end_date?: string | null
           id?: string
           is_generated?: boolean | null
           latitude?: number | null
@@ -91,6 +93,7 @@ export type Database = {
           created_by?: string | null
           date?: string
           description?: string
+          end_date?: string | null
           id?: string
           is_generated?: boolean | null
           latitude?: number | null

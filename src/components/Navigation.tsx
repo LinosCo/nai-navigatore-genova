@@ -33,6 +33,12 @@ const Navigation = () => {
       description: "Cronologia e preferiti"
     },
     {
+      to: "/calendario",
+      icon: BookOpen,
+      label: "Calendario",
+      description: "Vista calendario iniziative"
+    },
+    {
       to: "/mappa",
       icon: Map,
       label: "Mappa territoriale",
