@@ -44,21 +44,7 @@ export type Database = {
             foreignKeyName: "admin_actions_log_admin_user_id_fkey"
             columns: ["admin_user_id"]
             isOneToOne: false
-            referencedRelation: "admin_profiles_view"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "admin_actions_log_admin_user_id_fkey"
-            columns: ["admin_user_id"]
-            isOneToOne: false
             referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "admin_actions_log_target_user_id_fkey"
-            columns: ["target_user_id"]
-            isOneToOne: false
-            referencedRelation: "admin_profiles_view"
             referencedColumns: ["id"]
           },
           {
@@ -319,13 +305,6 @@ export type Database = {
             foreignKeyName: "profiles_disabled_by_fkey"
             columns: ["disabled_by"]
             isOneToOne: false
-            referencedRelation: "admin_profiles_view"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "profiles_disabled_by_fkey"
-            columns: ["disabled_by"]
-            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -406,13 +385,6 @@ export type Database = {
             foreignKeyName: "spid_access_logs_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "admin_profiles_view"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "spid_access_logs_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -441,72 +413,7 @@ export type Database = {
       }
     }
     Views: {
-      admin_profiles_view: {
-        Row: {
-          codice_fiscale_masked: string | null
-          cognome: string | null
-          created_at: string | null
-          disable_reason: string | null
-          disabled_at: string | null
-          disabled_by: string | null
-          email: string | null
-          enabled: boolean | null
-          id: string | null
-          livello_autenticazione_spid: string | null
-          nome: string | null
-          provider_autenticazione: string | null
-          ultimo_accesso_spid: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          codice_fiscale_masked?: never
-          cognome?: string | null
-          created_at?: string | null
-          disable_reason?: string | null
-          disabled_at?: string | null
-          disabled_by?: string | null
-          email?: string | null
-          enabled?: boolean | null
-          id?: string | null
-          livello_autenticazione_spid?: string | null
-          nome?: string | null
-          provider_autenticazione?: string | null
-          ultimo_accesso_spid?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          codice_fiscale_masked?: never
-          cognome?: string | null
-          created_at?: string | null
-          disable_reason?: string | null
-          disabled_at?: string | null
-          disabled_by?: string | null
-          email?: string | null
-          enabled?: boolean | null
-          id?: string | null
-          livello_autenticazione_spid?: string | null
-          nome?: string | null
-          provider_autenticazione?: string | null
-          ultimo_accesso_spid?: string | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "profiles_disabled_by_fkey"
-            columns: ["disabled_by"]
-            isOneToOne: false
-            referencedRelation: "admin_profiles_view"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "profiles_disabled_by_fkey"
-            columns: ["disabled_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+      [_ in never]: never
     }
     Functions: {
       disable_user: {
@@ -517,6 +424,29 @@ export type Database = {
         Args: { _user_id: string }
         Returns: boolean
       }
+      get_admin_profiles_count: {
+        Args: { _search?: string }
+        Returns: number
+      }
+      get_admin_profiles_masked: {
+        Args: { _limit?: number; _offset?: number; _search?: string }
+        Returns: {
+          codice_fiscale_masked: string
+          cognome: string
+          created_at: string
+          disable_reason: string
+          disabled_at: string
+          disabled_by: string
+          email: string
+          enabled: boolean
+          id: string
+          livello_autenticazione_spid: string
+          nome: string
+          provider_autenticazione: string
+          ultimo_accesso_spid: string
+          updated_at: string
+        }[]
+      }
       get_profile_full_pii: {
         Args: { _operation_reason: string; _profile_id: string }
         Returns: {
@@ -526,6 +456,25 @@ export type Database = {
           email: string
           id: string
           nome: string
+        }[]
+      }
+      get_profile_masked: {
+        Args: { _profile_id: string }
+        Returns: {
+          codice_fiscale_masked: string
+          cognome: string
+          created_at: string
+          disable_reason: string
+          disabled_at: string
+          disabled_by: string
+          email: string
+          enabled: boolean
+          id: string
+          livello_autenticazione_spid: string
+          nome: string
+          provider_autenticazione: string
+          ultimo_accesso_spid: string
+          updated_at: string
         }[]
       }
       get_spid_data_summary: {
