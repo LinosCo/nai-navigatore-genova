@@ -126,7 +126,7 @@ const ActivityDetailDialog = ({ activity, open, onOpenChange, onActivityUpdate }
             <div className="flex items-center space-x-2">
               {activity.is_generated && (
                 <Badge variant="outline" className="bg-primary/10 text-primary border-primary">
-                  AI Generated
+                  Creato automaticamente
                 </Badge>
               )}
               <Badge className={typeConfig[activity.type].color}>

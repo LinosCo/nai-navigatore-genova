@@ -234,16 +234,16 @@ const ContentCardGenerator = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            Generatore Schede Attività AI
+            Generatore Schede Attività
           </CardTitle>
           <p className="text-sm text-muted-foreground">
-            Crea automaticamente schede dettagliate per attività educative rivolte a studenti NAI
+            Crea schede dettagliate per attività educative rivolte a studenti NAI
           </p>
         </CardHeader>
         <CardContent className="space-y-4">
           <Tabs value={mode} onValueChange={(value) => setMode(value as 'prompt' | 'url' | 'report')}>
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="prompt">Genera con AI</TabsTrigger>
+              <TabsTrigger value="prompt">Genera Automaticamente</TabsTrigger>
               <TabsTrigger value="url">Analizza URL</TabsTrigger>
               <TabsTrigger value="report">Segnala Sito</TabsTrigger>
             </TabsList>

@@ -13,10 +13,10 @@ const GeneratoreAttivita = () => {
         <div className="mb-8">
           <h1 className="text-2xl font-semibold text-foreground mb-2 flex items-center gap-2">
             <Sparkles className="h-6 w-6 text-primary" />
-            Generatore di Attività AI
+            Generatore di Attività
           </h1>
           <p className="text-muted-foreground">
-            Crea contenuti personalizzati per studenti NAI utilizzando l'intelligenza artificiale
+            Crea contenuti personalizzati per studenti NAI con strumenti avanzati
           </p>
         </div>
 
@@ -24,7 +24,7 @@ const GeneratoreAttivita = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-primary" />
-              Generatore Intelligente
+              Generatore Automatico
             </CardTitle>
           </CardHeader>
           <CardContent>
