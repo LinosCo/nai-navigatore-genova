@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_actions_log: {
+        Row: {
+          action: string
+          admin_user_id: string
+          details: Json | null
+          id: string
+          target_user_id: string | null
+          timestamp: string | null
+        }
+        Insert: {
+          action: string
+          admin_user_id: string
+          details?: Json | null
+          id?: string
+          target_user_id?: string | null
+          timestamp?: string | null
+        }
+        Update: {
+          action?: string
+          admin_user_id?: string
+          details?: Json | null
+          id?: string
+          target_user_id?: string | null
+          timestamp?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_actions_log_admin_user_id_fkey"
+            columns: ["admin_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "admin_actions_log_target_user_id_fkey"
+            columns: ["target_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       app_settings: {
         Row: {
           created_at: string
@@ -116,7 +158,11 @@ export type Database = {
           cognome: string | null
           created_at: string | null
           dati_spid: Json | null
+          disable_reason: string | null
+          disabled_at: string | null
+          disabled_by: string | null
           email: string | null
+          enabled: boolean
           id: string
           livello_autenticazione_spid: string | null
           nome: string | null
@@ -129,7 +175,11 @@ export type Database = {
           cognome?: string | null
           created_at?: string | null
           dati_spid?: Json | null
+          disable_reason?: string | null
+          disabled_at?: string | null
+          disabled_by?: string | null
           email?: string | null
+          enabled?: boolean
           id: string
           livello_autenticazione_spid?: string | null
           nome?: string | null
@@ -142,7 +192,11 @@ export type Database = {
           cognome?: string | null
           created_at?: string | null
           dati_spid?: Json | null
+          disable_reason?: string | null
+          disabled_at?: string | null
+          disabled_by?: string | null
           email?: string | null
+          enabled?: boolean
           id?: string
           livello_autenticazione_spid?: string | null
           nome?: string | null
@@ -150,7 +204,15 @@ export type Database = {
           ultimo_accesso_spid?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_disabled_by_fkey"
+            columns: ["disabled_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       spid_access_logs: {
         Row: {
@@ -222,6 +284,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      disable_user: {
+        Args: { _reason?: string; _user_id: string }
+        Returns: boolean
+      }
+      enable_user: {
+        Args: { _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
