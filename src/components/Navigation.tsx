@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Search, Map, BookOpen, HelpCircle, User, Bell, LogOut, Settings } from "lucide-react";
+import { Search, Map, BookOpen, HelpCircle, User, Bell, LogOut, Settings, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -45,9 +45,15 @@ const Navigation = () => {
       description: "Vista geografica servizi"
     },
     {
+      to: "/generatore",
+      icon: Sparkles,
+      label: "Generatore AI",
+      description: "Crea contenuti con l'AI"
+    },
+    {
       to: "/supporto",
       icon: HelpCircle,
-      label: "Richiedi supporto",
+      label: "Supporto",
       description: "Assistenza e contatti"
     }
   ];
