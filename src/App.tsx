@@ -9,6 +9,7 @@ import Activities from "./pages/Activities";
 import Calendar from "./pages/Calendar";
 import Map from "./pages/Map";
 import Support from "./pages/Support";
+import GeneratoreAttivita from "./pages/GeneratoreAttivita";
 import Auth from "./pages/Auth";
 import AdminSettings from "./pages/AdminSettings";
 import NotFound from "./pages/NotFound";
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/calendario" element={<Calendar />} />
             <Route path="/mappa" element={<Map />} />
             <Route path="/supporto" element={<Support />} />
+            <Route path="/generatore" element={<GeneratoreAttivita />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/admin" element={<AdminSettings />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

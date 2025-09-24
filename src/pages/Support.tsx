@@ -5,9 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Phone, Mail, MessageCircle, HelpCircle, FileText, Users, Sparkles } from "lucide-react";
-import ContentCardGenerator from "@/components/ContentCardGenerator";
+import { Phone, Mail, MessageCircle, HelpCircle, FileText, Users } from "lucide-react";
 
 const Support = () => {
   const contacts = [
@@ -58,30 +56,13 @@ const Support = () => {
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold text-foreground mb-2">Richiedi supporto</h1>
+          <h1 className="text-2xl font-semibold text-foreground mb-2">Supporto e Contatti</h1>
           <p className="text-muted-foreground">
             Contatti, assistenza e risorse per insegnanti che lavorano con studenti NAI
           </p>
         </div>
 
-        <Tabs defaultValue="generator" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="generator" className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4" />
-              Generatore AI
-            </TabsTrigger>
-            <TabsTrigger value="support" className="flex items-center gap-2">
-              <MessageCircle className="h-4 w-4" />
-              Supporto Tradizionale
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="generator" className="mt-6">
-            <ContentCardGenerator />
-          </TabsContent>
-
-          <TabsContent value="support" className="mt-6">
-            <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-8">
           {/* Contact Form */}
           <div className="lg:col-span-2">
             <Card>
@@ -255,9 +236,7 @@ const Support = () => {
               </CardContent>
             </Card>
           </div>
-            </div>
-          </TabsContent>
-        </Tabs>
+        </div>
       </main>
       
       <Footer />
