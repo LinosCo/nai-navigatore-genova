@@ -48,10 +48,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "admin_actions_log_admin_user_id_fkey"
+            columns: ["admin_user_id"]
+            isOneToOne: false
+            referencedRelation: "safe_profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "admin_actions_log_target_user_id_fkey"
             columns: ["target_user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "admin_actions_log_target_user_id_fkey"
+            columns: ["target_user_id"]
+            isOneToOne: false
+            referencedRelation: "safe_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -152,6 +166,36 @@ export type Database = {
         }
         Relationships: []
       }
+      profile_access_log: {
+        Row: {
+          access_type: string
+          accessed_profile_id: string
+          accessor_user_id: string | null
+          id: string
+          ip_address: unknown | null
+          timestamp: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          access_type: string
+          accessed_profile_id: string
+          accessor_user_id?: string | null
+          id?: string
+          ip_address?: unknown | null
+          timestamp?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          access_type?: string
+          accessed_profile_id?: string
+          accessor_user_id?: string | null
+          id?: string
+          ip_address?: unknown | null
+          timestamp?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           codice_fiscale: string | null
@@ -212,6 +256,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "profiles_disabled_by_fkey"
+            columns: ["disabled_by"]
+            isOneToOne: false
+            referencedRelation: "safe_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       spid_access_logs: {
@@ -256,6 +307,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "spid_access_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "safe_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       user_roles: {
@@ -281,7 +339,39 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      safe_profiles: {
+        Row: {
+          cognome: string | null
+          created_at: string | null
+          email: string | null
+          enabled: boolean | null
+          id: string | null
+          nome: string | null
+          provider_autenticazione: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          cognome?: string | null
+          created_at?: string | null
+          email?: string | null
+          enabled?: boolean | null
+          id?: string | null
+          nome?: string | null
+          provider_autenticazione?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          cognome?: string | null
+          created_at?: string | null
+          email?: string | null
+          enabled?: boolean | null
+          id?: string | null
+          nome?: string | null
+          provider_autenticazione?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       disable_user: {
@@ -302,6 +392,19 @@ export type Database = {
       is_admin: {
         Args: { _user_id: string }
         Returns: boolean
+      }
+      log_profile_access: {
+        Args: { _access_type: string; _profile_id: string }
+        Returns: undefined
+      }
+      secure_update_profile: {
+        Args: {
+          _cognome?: string
+          _email?: string
+          _nome?: string
+          _profile_id: string
+        }
+        Returns: undefined
       }
     }
     Enums: {
