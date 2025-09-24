@@ -251,9 +251,11 @@ export type Database = {
       profiles: {
         Row: {
           codice_fiscale: string | null
+          codice_fiscale_encrypted: string | null
           cognome: string | null
           created_at: string | null
           dati_spid: Json | null
+          dati_spid_encrypted: string | null
           disable_reason: string | null
           disabled_at: string | null
           disabled_by: string | null
@@ -268,9 +270,11 @@ export type Database = {
         }
         Insert: {
           codice_fiscale?: string | null
+          codice_fiscale_encrypted?: string | null
           cognome?: string | null
           created_at?: string | null
           dati_spid?: Json | null
+          dati_spid_encrypted?: string | null
           disable_reason?: string | null
           disabled_at?: string | null
           disabled_by?: string | null
@@ -285,9 +289,11 @@ export type Database = {
         }
         Update: {
           codice_fiscale?: string | null
+          codice_fiscale_encrypted?: string | null
           cognome?: string | null
           created_at?: string | null
           dati_spid?: Json | null
+          dati_spid_encrypted?: string | null
           disable_reason?: string | null
           disabled_at?: string | null
           disabled_by?: string | null
@@ -416,6 +422,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      decrypt_sensitive_data: {
+        Args: { _encrypted_data: string; _field_type?: string }
+        Returns: string
+      }
       disable_user: {
         Args: { _reason?: string; _user_id: string }
         Returns: boolean
@@ -423,6 +433,10 @@ export type Database = {
       enable_user: {
         Args: { _user_id: string }
         Returns: boolean
+      }
+      encrypt_sensitive_data: {
+        Args: { _data: string; _field_type?: string }
+        Returns: string
       }
       get_admin_profiles_count: {
         Args: { _search?: string }
@@ -446,6 +460,10 @@ export type Database = {
           ultimo_accesso_spid: string
           updated_at: string
         }[]
+      }
+      get_codice_fiscale_decrypted: {
+        Args: { _profile_id: string }
+        Returns: string
       }
       get_profile_full_pii: {
         Args: { _operation_reason: string; _profile_id: string }
@@ -476,6 +494,10 @@ export type Database = {
           ultimo_accesso_spid: string
           updated_at: string
         }[]
+      }
+      get_spid_data_decrypted: {
+        Args: { _profile_id: string }
+        Returns: Json
       }
       get_spid_data_summary: {
         Args: { _profile_id: string }
@@ -514,6 +536,10 @@ export type Database = {
         Args: { _codice_fiscale: string; _full_access?: boolean }
         Returns: string
       }
+      migrate_to_encrypted_fields: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       request_pii_access: {
         Args: {
           _justification: string
@@ -529,6 +555,14 @@ export type Database = {
           _nome?: string
           _profile_id: string
         }
+        Returns: undefined
+      }
+      update_codice_fiscale_encrypted: {
+        Args: { _new_codice_fiscale: string; _profile_id: string }
+        Returns: undefined
+      }
+      update_spid_data_encrypted: {
+        Args: { _new_spid_data: Json; _profile_id: string }
         Returns: undefined
       }
     }
