@@ -75,7 +75,12 @@ const AdminSettings = () => {
   const [showRoleDialog, setShowRoleDialog] = useState(false);
 
   useEffect(() => {
-    if (!isAdmin) return;
+    console.log('AdminSettings useEffect - isAdmin:', isAdmin, 'user:', user);
+    if (!isAdmin) {
+      console.log('User is not admin, not fetching data');
+      return;
+    }
+    console.log('User is admin, fetching data...');
     fetchUsers();
     fetchUserRoles();
     fetchAdminLogs();

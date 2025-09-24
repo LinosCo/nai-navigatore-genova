@@ -11,6 +11,7 @@ export const useUserRole = () => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
+    console.log('useUserRole useEffect - user:', user);
     if (user) {
       fetchUserRoles();
     } else {
@@ -25,10 +26,13 @@ export const useUserRole = () => {
 
     try {
       setLoading(true);
+      console.log('Fetching roles for user:', user.id);
       const { data, error } = await supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', user.id);
+
+      console.log('User roles query result:', { data, error });
 
       if (error) {
         console.error('Error fetching user roles:', error);
@@ -36,8 +40,10 @@ export const useUserRole = () => {
       }
 
       const userRoles = data?.map(row => row.role) || [];
+      console.log('User roles:', userRoles);
       setRoles(userRoles);
       setIsAdmin(userRoles.includes('admin'));
+      console.log('Is admin:', userRoles.includes('admin'));
     } catch (error) {
       console.error('Error:', error);
     } finally {
