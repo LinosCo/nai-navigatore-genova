@@ -86,6 +86,33 @@ export type Database = {
         }
         Relationships: []
       }
+      auth_rate_limits: {
+        Row: {
+          attempt_count: number | null
+          blocked_until: string | null
+          first_attempt: string | null
+          id: string
+          identifier: string
+          last_attempt: string | null
+        }
+        Insert: {
+          attempt_count?: number | null
+          blocked_until?: string | null
+          first_attempt?: string | null
+          id?: string
+          identifier: string
+          last_attempt?: string | null
+        }
+        Update: {
+          attempt_count?: number | null
+          blocked_until?: string | null
+          first_attempt?: string | null
+          id?: string
+          identifier?: string
+          last_attempt?: string | null
+        }
+        Relationships: []
+      }
       initiatives: {
         Row: {
           contact: string
@@ -244,6 +271,42 @@ export type Database = {
           },
         ]
       }
+      security_events: {
+        Row: {
+          details: Json | null
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          severity: string | null
+          target_resource: string | null
+          timestamp: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          details?: Json | null
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          severity?: string | null
+          target_resource?: string | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          details?: Json | null
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          severity?: string | null
+          target_resource?: string | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       spid_access_logs: {
         Row: {
           codice_fiscale: string
@@ -335,6 +398,15 @@ export type Database = {
       }
       log_profile_access: {
         Args: { _access_type: string; _profile_id: string }
+        Returns: undefined
+      }
+      log_security_event: {
+        Args: {
+          _details?: Json
+          _event_type: string
+          _severity?: string
+          _target_resource?: string
+        }
         Returns: undefined
       }
       secure_update_profile: {
