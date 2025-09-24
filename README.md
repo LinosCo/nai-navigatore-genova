@@ -1,73 +1,63 @@
-# Welcome to your Lovable project
+# NEIP - Piattaforma Educativa
 
-## Project info
+## Descrizione del progetto
 
-**URL**: https://lovable.dev/projects/296e8ba6-efd0-433a-ac5a-b34671924b58
+NEIP è una piattaforma educativa dedicata al supporto di insegnanti che lavorano con studenti NAI (Nuovi Arrivati in Italia). La piattaforma offre strumenti per trovare attività, servizi di supporto e risorse educative.
 
-## How can I edit this code?
+## Come modificare il codice
 
-There are several ways of editing your application.
+**Utilizzare un IDE locale**
 
-**Use Lovable**
+Clona il repository e lavora in locale con il tuo IDE preferito:
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/296e8ba6-efd0-433a-ac5a-b34671924b58) and start prompting.
+Requisiti: Node.js & npm installati - [installa con nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+Segui questi passaggi:
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# Step 1: Clona il repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
+# Step 2: Naviga nella directory del progetto
 cd <YOUR_PROJECT_NAME>
 
-# Step 3: Install the necessary dependencies.
+# Step 3: Installa le dipendenze
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 4: Avvia il server di sviluppo
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+**Modifica diretta su GitHub**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- Naviga ai file desiderati
+- Clicca sul pulsante "Edit" (icona matita) in alto a destra
+- Apporta le modifiche e committa
 
-**Use GitHub Codespaces**
+**Utilizzare GitHub Codespaces**
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- Naviga alla pagina principale del repository
+- Clicca sul pulsante "Code" (verde) in alto a destra
+- Seleziona la tab "Codespaces"
+- Clicca su "New codespace" per lanciare un ambiente Codespace
+- Modifica i file direttamente nel Codespace e committa le modifiche
 
-## What technologies are used for this project?
+## Tecnologie utilizzate
 
-This project is built with:
+Questo progetto è costruito con:
 
 - Vite
 - TypeScript
 - React
 - shadcn-ui
 - Tailwind CSS
+- Supabase (backend)
 
-## How can I deploy this project?
+## Come deployare il progetto
 
-Simply open [Lovable](https://lovable.dev/projects/296e8ba6-efd0-433a-ac5a-b34671924b58) and click on Share -> Publish.
+Il progetto può essere deployato su qualsiasi piattaforma che supporta applicazioni React statiche, come:
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- Vercel
+- Netlify
+- GitHub Pages
+- Altri servizi di hosting per applicazioni web
