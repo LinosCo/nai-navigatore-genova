@@ -47,8 +47,8 @@ const Navigation = () => {
     {
       to: "/generatore",
       icon: Sparkles,
-      label: "Generatore AI",
-      description: "Crea contenuti con l'AI"
+      label: "Generatore",
+      description: "Crea contenuti automaticamente"
     },
     {
       to: "/supporto",
