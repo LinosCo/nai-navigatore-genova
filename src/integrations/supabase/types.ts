@@ -110,6 +110,92 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          codice_fiscale: string | null
+          cognome: string | null
+          created_at: string | null
+          dati_spid: Json | null
+          email: string | null
+          id: string
+          livello_autenticazione_spid: string | null
+          nome: string | null
+          provider_autenticazione: string | null
+          ultimo_accesso_spid: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          codice_fiscale?: string | null
+          cognome?: string | null
+          created_at?: string | null
+          dati_spid?: Json | null
+          email?: string | null
+          id: string
+          livello_autenticazione_spid?: string | null
+          nome?: string | null
+          provider_autenticazione?: string | null
+          ultimo_accesso_spid?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          codice_fiscale?: string | null
+          cognome?: string | null
+          created_at?: string | null
+          dati_spid?: Json | null
+          email?: string | null
+          id?: string
+          livello_autenticazione_spid?: string | null
+          nome?: string | null
+          provider_autenticazione?: string | null
+          ultimo_accesso_spid?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      spid_access_logs: {
+        Row: {
+          codice_fiscale: string
+          id: string
+          identity_provider: string
+          ip_address: unknown | null
+          livello_autenticazione: string
+          session_id: string | null
+          timestamp: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          codice_fiscale: string
+          id?: string
+          identity_provider: string
+          ip_address?: unknown | null
+          livello_autenticazione: string
+          session_id?: string | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          codice_fiscale?: string
+          id?: string
+          identity_provider?: string
+          ip_address?: unknown | null
+          livello_autenticazione?: string
+          session_id?: string | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "spid_access_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
