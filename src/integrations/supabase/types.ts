@@ -179,6 +179,80 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_preferences: {
+        Row: {
+          created_at: string
+          enable_all_notifications: boolean
+          enable_email_notifications: boolean
+          enabled_categories: string[] | null
+          id: string
+          notification_email: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          enable_all_notifications?: boolean
+          enable_email_notifications?: boolean
+          enabled_categories?: string[] | null
+          id?: string
+          notification_email?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          enable_all_notifications?: boolean
+          enable_email_notifications?: boolean
+          enabled_categories?: string[] | null
+          id?: string
+          notification_email?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          initiative_id: string | null
+          message: string
+          read: boolean
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          initiative_id?: string | null
+          message: string
+          read?: boolean
+          title: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          initiative_id?: string | null
+          message?: string
+          read?: boolean
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "initiatives"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pii_access_requests: {
         Row: {
           admin_user_id: string
@@ -507,6 +581,10 @@ export type Database = {
           provider: string
           ultimo_accesso: string
         }[]
+      }
+      get_unread_notification_count: {
+        Args: { user_id_param: string }
+        Returns: number
       }
       has_role: {
         Args: {
