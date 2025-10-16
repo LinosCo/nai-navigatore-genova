@@ -12,6 +12,7 @@ import Support from "./pages/Support";
 import GeneratoreAttivita from "./pages/GeneratoreAttivita";
 import Auth from "./pages/Auth";
 import AdminSettings from "./pages/AdminSettings";
+import NotificationSettings from "./pages/NotificationSettings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/generatore" element={<GeneratoreAttivita />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/admin" element={<AdminSettings />} />
+            <Route path="/impostazioni-notifiche" element={<NotificationSettings />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

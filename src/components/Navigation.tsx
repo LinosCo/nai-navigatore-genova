@@ -1,11 +1,11 @@
-import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Search, Map, BookOpen, HelpCircle, User, Bell, LogOut, Settings, Sparkles } from "lucide-react";
+import { Search, Map, BookOpen, HelpCircle, User, LogOut, Settings, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
+import { NotificationsPanel } from "@/components/NotificationsPanel";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const Navigation = () => {
-  const [hasNotifications] = useState(true);
   const { user, signOut } = useAuth();
   const { isAdmin } = useUserRole();
 
@@ -110,12 +109,7 @@ const Navigation = () => {
 
           {/* User Actions */}
           <div className="flex items-center space-x-3">
-            <Button variant="ghost" size="sm" className="relative">
-              <Bell className="h-4 w-4" />
-              {hasNotifications && (
-                <span className="absolute -top-1 -right-1 w-2 h-2 bg-accent rounded-full"></span>
-              )}
-            </Button>
+            {user && <NotificationsPanel />}
             
             {user ? (
               <div className="flex items-center space-x-3 pl-3 border-l border-border">
