@@ -148,6 +148,16 @@ const Auth = () => {
         throw error;
       }
 
+      // Invia email di benvenuto personalizzata
+      try {
+        await supabase.functions.invoke('send-welcome-email', {
+          body: { email }
+        });
+      } catch (emailError) {
+        console.error("Error sending welcome email:", emailError);
+        // Non bloccare la registrazione se l'email fallisce
+      }
+
       setMessage("Controlla la tua email per confermare la registrazione");
       toast.success("Registrazione completata! Controlla la tua email.");
     } catch (error: any) {
