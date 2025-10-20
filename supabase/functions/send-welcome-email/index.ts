@@ -24,7 +24,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Sending welcome email to:", email);
 
     const emailResponse = await resend.emails.send({
-      from: "NEIP <onboarding@resend.dev>", // Cambia con il tuo dominio verificato
+      from: "NEIP <noreply@neiptest.linos.co>",
       to: [email],
       subject: "Benvenuto su NEIP!",
       html: `
