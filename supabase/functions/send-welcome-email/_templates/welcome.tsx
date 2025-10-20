@@ -63,23 +63,23 @@ export const WelcomeEmail = ({ name, appUrl }: WelcomeEmailProps) => (
 
 export default WelcomeEmail
 
-// Stili - Personalizza questi per cambiare l'aspetto dell'email
+// Stili - Designer Italia Design System
 const main = {
   backgroundColor: '#f5f5f5',
-  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+  fontFamily: 'Titillium Web, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
 }
 
 const container = {
   backgroundColor: '#ffffff',
-  borderRadius: '8px',
+  borderRadius: '4px',
   padding: '40px',
   margin: '0 auto',
   maxWidth: '600px',
-  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+  boxShadow: '0 1px 3px 0 rgba(220, 228, 237, 0.4)',
 }
 
 const h1 = {
-  color: '#2563eb',
+  color: '#0066CC', // Blu Italia (primary)
   fontSize: '28px',
   fontWeight: 'bold',
   margin: '0 0 10px 0',
@@ -87,14 +87,14 @@ const h1 = {
 }
 
 const subtitle = {
-  color: '#6b7280',
+  color: '#5C6F82', // Grigio Italia
   fontSize: '16px',
   textAlign: 'center' as const,
   margin: '0 0 30px 0',
 }
 
 const h2 = {
-  color: '#333',
+  color: '#17324D', // Foreground
   fontSize: '18px',
   fontWeight: '600',
   marginTop: '0',
@@ -102,21 +102,21 @@ const h2 = {
 }
 
 const text = {
-  color: '#333',
+  color: '#17324D',
   fontSize: '14px',
   lineHeight: '1.6',
   margin: '20px 0',
 }
 
 const featuresSection = {
-  backgroundColor: '#f9fafb',
+  backgroundColor: '#E6F0FF', // Primary light
   padding: '20px',
-  borderRadius: '6px',
+  borderRadius: '4px',
   margin: '20px 0',
 }
 
 const featureItem = {
-  color: '#333',
+  color: '#17324D',
   fontSize: '14px',
   margin: '8px 0',
   lineHeight: '1.6',
@@ -128,11 +128,11 @@ const buttonContainer = {
 }
 
 const button = {
-  backgroundColor: '#2563eb',
-  borderRadius: '6px',
+  backgroundColor: '#0066CC', // Blu Italia
+  borderRadius: '4px',
   color: '#ffffff',
   fontSize: '16px',
-  fontWeight: '500',
+  fontWeight: '600',
   textDecoration: 'none',
   textAlign: 'center' as const,
   display: 'inline-block',
@@ -142,12 +142,12 @@ const button = {
 const footer = {
   marginTop: '40px',
   paddingTop: '20px',
-  borderTop: '1px solid #e5e7eb',
+  borderTop: '1px solid #DFE4E8',
   textAlign: 'center' as const,
 }
 
 const footerText = {
-  color: '#6b7280',
+  color: '#5C6F82',
   fontSize: '14px',
   margin: '10px 0',
 }
