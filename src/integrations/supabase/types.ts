@@ -500,6 +500,10 @@ export type Database = {
         Args: { _encrypted_data: string; _field_type?: string }
         Returns: string
       }
+      delete_user: {
+        Args: { _reason?: string; _user_id: string }
+        Returns: boolean
+      }
       disable_user: {
         Args: { _reason?: string; _user_id: string }
         Returns: boolean

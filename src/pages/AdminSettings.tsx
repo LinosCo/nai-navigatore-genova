@@ -23,7 +23,8 @@ import {
   AlertTriangle,
   History,
   Settings,
-  Edit
+  Edit,
+  Trash2
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -70,8 +71,10 @@ const AdminSettings = () => {
   // Dialog states
   const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
   const [disableReason, setDisableReason] = useState("");
+  const [deleteReason, setDeleteReason] = useState("");
   const [newUserRole, setNewUserRole] = useState<'admin' | 'moderator' | 'user'>('user');
   const [showDisableDialog, setShowDisableDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showRoleDialog, setShowRoleDialog] = useState(false);
 
   useEffect(() => {
@@ -190,6 +193,30 @@ const AdminSettings = () => {
     } catch (error: any) {
       console.error('Error enabling user:', error);
       toast.error('Errore nell\'abilitazione utente: ' + error.message);
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const deleteUser = async (userId: string, reason: string) => {
+    try {
+      setActionLoading(userId);
+      
+      const { error } = await supabase.rpc('delete_user', {
+        _user_id: userId,
+        _reason: reason
+      });
+
+      if (error) throw error;
+
+      toast.success('Utente eliminato con successo');
+      fetchUsers();
+      fetchAdminLogs();
+      setShowDeleteDialog(false);
+      setDeleteReason("");
+    } catch (error: any) {
+      console.error('Error deleting user:', error);
+      toast.error('Errore nell\'eliminazione utente: ' + error.message);
     } finally {
       setActionLoading(null);
     }
@@ -448,6 +475,18 @@ const AdminSettings = () => {
                                 <Edit className="h-3 w-3 mr-1" />
                                 Ruoli
                               </Button>
+                              <Button
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedUser(userProfile);
+                                  setShowDeleteDialog(true);
+                                }}
+                                disabled={actionLoading === userProfile.id || userProfile.id === user?.id}
+                              >
+                                <Trash2 className="h-3 w-3 mr-1" />
+                                Elimina
+                              </Button>
                             </div>
                           </TableCell>
                         </TableRow>
@@ -599,6 +638,58 @@ const AdminSettings = () => {
                 disabled={!disableReason.trim()}
               >
                 Disabilita Utente
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Dialog Elimina Utente */}
+        <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-destructive">
+                <AlertTriangle className="h-5 w-5" />
+                Elimina Utente
+              </DialogTitle>
+              <DialogDescription>
+                <div className="space-y-2">
+                  <p className="font-medium">
+                    Stai per eliminare PERMANENTEMENTE l'utente {selectedUser?.nome} {selectedUser?.cognome}.
+                  </p>
+                  <Alert variant="destructive">
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertDescription>
+                      Questa azione è IRREVERSIBILE. L'utente e tutti i suoi dati verranno eliminati definitivamente dal sistema.
+                    </AlertDescription>
+                  </Alert>
+                </div>
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium">Motivo dell'eliminazione *</label>
+                <Textarea
+                  placeholder="Inserisci il motivo dell'eliminazione (obbligatorio)..."
+                  value={deleteReason}
+                  onChange={(e) => setDeleteReason(e.target.value)}
+                  className="mt-2"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => {
+                setShowDeleteDialog(false);
+                setDeleteReason("");
+              }}>
+                Annulla
+              </Button>
+              <Button 
+                variant="destructive" 
+                onClick={() => selectedUser && deleteUser(selectedUser.id, deleteReason)}
+                disabled={!deleteReason.trim()}
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Elimina Definitivamente
               </Button>
             </DialogFooter>
           </DialogContent>
