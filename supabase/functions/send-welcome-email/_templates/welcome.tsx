@@ -22,7 +22,7 @@ export const WelcomeEmail = ({ name, appUrl }: WelcomeEmailProps) => (
     <Preview>Benvenuto su NEIP - Scopri iniziative nella tua zona</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>🎉 Benvenuto{name ? ` ${name}` : ''}!</Heading>
+        <Heading style={h1}>Benvenuto{name ? ` ${name}` : ''}!</Heading>
         <Text style={subtitle}>Grazie per esserti registrato su NEIP</Text>
         
         <Text style={text}>
@@ -31,11 +31,11 @@ export const WelcomeEmail = ({ name, appUrl }: WelcomeEmailProps) => (
         
         <Section style={featuresSection}>
           <Heading style={h2}>Cosa puoi fare con NEIP:</Heading>
-          <Text style={featureItem}>📍 Scopri attività ed eventi nella tua zona</Text>
-          <Text style={featureItem}>🗺️ Visualizza le iniziative su mappa interattiva</Text>
-          <Text style={featureItem}>🔔 Ricevi notifiche per nuove iniziative</Text>
-          <Text style={featureItem}>✨ Crea e condividi le tue iniziative</Text>
-          <Text style={featureItem}>🤝 Connettiti con la tua comunità</Text>
+          <Text style={featureItem}>• Scopri attività ed eventi nella tua zona</Text>
+          <Text style={featureItem}>• Visualizza le iniziative su mappa interattiva</Text>
+          <Text style={featureItem}>• Ricevi notifiche per nuove iniziative</Text>
+          <Text style={featureItem}>• Crea e condividi le tue iniziative</Text>
+          <Text style={featureItem}>• Connettiti con la tua comunità</Text>
         </Section>
         
         <Section style={buttonContainer}>
@@ -43,6 +43,10 @@ export const WelcomeEmail = ({ name, appUrl }: WelcomeEmailProps) => (
             Inizia ad esplorare
           </Link>
         </Section>
+        
+        <Text style={text}>
+          NEIP ti aiuta a rimanere connesso con la tua comunità locale. Scopri eventi, partecipa ad attività e contribuisci a rendere più viva la tua zona.
+        </Text>
         
         <Text style={text}>
           Se hai domande o hai bisogno di assistenza, non esitare a contattarci.

@@ -34,11 +34,37 @@ const handler = async (req: Request): Promise<Response> => {
       })
     );
 
+    // Genera anche la versione plain text
+    const plainText = `
+Benvenuto${name ? ` ${name}` : ''}!
+
+Grazie per esserti registrato su NEIP
+
+Siamo felici di averti con noi! NEIP è la piattaforma per scoprire e partecipare a iniziative nella tua zona.
+
+Cosa puoi fare con NEIP:
+
+- Scopri attività ed eventi nella tua zona
+- Visualizza le iniziative su mappa interattiva
+- Ricevi notifiche per nuove iniziative
+- Crea e condividi le tue iniziative
+- Connettiti con la tua comunità
+
+Inizia ad esplorare: ${appUrl}
+
+Se hai domande o hai bisogno di assistenza, non esitare a contattarci.
+
+---
+Questo è un messaggio automatico, per favore non rispondere a questa email.
+© ${new Date().getFullYear()} NEIP. Tutti i diritti riservati.
+`;
+
     const emailResponse = await resend.emails.send({
       from: "NEIP <noreply@neiptest.linos.co>",
       to: [email],
-      subject: "Benvenuto su NEIP!",
+      subject: "Benvenuto su NEIP - Inizia a scoprire la tua comunità",
       html,
+      text: plainText,
     });
 
     console.log("Email sent successfully:", emailResponse);
