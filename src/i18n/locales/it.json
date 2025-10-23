@@ -223,5 +223,10 @@
     "privacy": "Privacy Policy",
     "terms": "Termini di Servizio",
     "credits": "Piattaforma NEIP - Navigatore Educativo per l'Inclusione e la Partecipazione"
+  },
+  "accessibility": {
+    "skipToMain": "Salta al contenuto principale",
+    "skipToNav": "Salta alla navigazione",
+    "skipToSearch": "Salta alla ricerca"
   }
 }
