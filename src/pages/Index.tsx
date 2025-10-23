@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
-import SearchSection from "@/components/SearchSection";
+import SearchSection, { SearchFilters } from "@/components/SearchSection";
 import ActivityCard from "@/components/ActivityCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -34,9 +34,16 @@ const Index = () => {
   const [initiatives, setInitiatives] = useState<Initiative[]>([]);
   const [filteredInitiatives, setFilteredInitiatives] = useState<Initiative[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedType, setSelectedType] = useState<string>("all");
-  const [selectedLocation, setSelectedLocation] = useState<string>("all");
+  const [currentFilters, setCurrentFilters] = useState<SearchFilters>({
+    searchTerm: "",
+    type: "all",
+    location: "all",
+    ageGroup: "all",
+    format: "all",
+    language: "all",
+    isFree: null,
+    difficultyLevel: "all"
+  });
 
   useEffect(() => {
     fetchInitiatives();
@@ -44,7 +51,7 @@ const Index = () => {
 
   useEffect(() => {
     filterInitiatives();
-  }, [initiatives, searchTerm, selectedType, selectedLocation]);
+  }, [initiatives, currentFilters]);
 
   const fetchInitiatives = async () => {
     try {
@@ -78,8 +85,8 @@ const Index = () => {
     let filtered = initiatives;
 
     // Filter by search term
-    if (searchTerm.trim()) {
-      const term = searchTerm.toLowerCase();
+    if (currentFilters.searchTerm.trim()) {
+      const term = currentFilters.searchTerm.toLowerCase();
       filtered = filtered.filter(initiative =>
         initiative.title.toLowerCase().includes(term) ||
         initiative.description.toLowerCase().includes(term) ||
@@ -90,24 +97,59 @@ const Index = () => {
     }
 
     // Filter by type
-    if (selectedType !== "all") {
-      filtered = filtered.filter(initiative => initiative.type === selectedType);
+    if (currentFilters.type !== "all") {
+      filtered = filtered.filter(initiative => initiative.type === currentFilters.type);
     }
 
-    // Filter by location (simple implementation)
-    if (selectedLocation !== "all") {
-      filtered = filtered.filter(initiative => 
-        initiative.location.toLowerCase().includes(selectedLocation.toLowerCase())
+    // Filter by location
+    if (currentFilters.location !== "all") {
+      filtered = filtered.filter(initiative =>
+        initiative.location.toLowerCase().includes(currentFilters.location.toLowerCase())
+      );
+    }
+
+    // Filter by age group
+    if (currentFilters.ageGroup !== "all") {
+      filtered = filtered.filter(initiative =>
+        (initiative as any).age_group === currentFilters.ageGroup ||
+        (initiative as any).age_group === "tutti"
+      );
+    }
+
+    // Filter by format
+    if (currentFilters.format !== "all") {
+      filtered = filtered.filter(initiative =>
+        (initiative as any).format === currentFilters.format
+      );
+    }
+
+    // Filter by language
+    if (currentFilters.language !== "all") {
+      filtered = filtered.filter(initiative =>
+        (initiative as any).language === currentFilters.language ||
+        (initiative as any).language === "multilingua"
+      );
+    }
+
+    // Filter by free only
+    if (currentFilters.isFree === true) {
+      filtered = filtered.filter(initiative =>
+        (initiative as any).is_free === true
+      );
+    }
+
+    // Filter by difficulty level
+    if (currentFilters.difficultyLevel !== "all") {
+      filtered = filtered.filter(initiative =>
+        (initiative as any).difficulty_level === currentFilters.difficultyLevel
       );
     }
 
     setFilteredInitiatives(filtered);
   };
 
-  const handleSearch = (term: string, type: string, location: string) => {
-    setSearchTerm(term);
-    setSelectedType(type);
-    setSelectedLocation(location);
+  const handleSearch = (filters: SearchFilters) => {
+    setCurrentFilters(filters);
   };
 
   const handleActivityClick = (initiative: Initiative) => {
@@ -131,7 +173,7 @@ const Index = () => {
           <div className="flex justify-between items-center mb-6">
             <div>
               <h2 className="text-xl font-semibold text-foreground">
-                {searchTerm ? `Risultati per "${searchTerm}"` : "Tutte le iniziative"}
+                {currentFilters.searchTerm ? `Risultati per "${currentFilters.searchTerm}"` : "Tutte le iniziative"}
               </h2>
               <p className="text-sm text-muted-foreground">
                 {loading ? "Caricamento..." : `${filteredInitiatives.length} risultati trovati`}
@@ -171,15 +213,15 @@ const Index = () => {
             <div className="text-center py-12">
               <div className="max-w-md mx-auto">
                 <h3 className="text-lg font-semibold text-foreground mb-2">
-                  {searchTerm ? "Nessun risultato trovato" : "Nessuna iniziativa disponibile"}
+                  {currentFilters.searchTerm ? "Nessun risultato trovato" : "Nessuna iniziativa disponibile"}
                 </h3>
                 <p className="text-muted-foreground mb-4">
-                  {searchTerm 
-                    ? "Prova a modificare i criteri di ricerca" 
+                  {currentFilters.searchTerm
+                    ? "Prova a modificare i criteri di ricerca"
                     : "Al momento non ci sono iniziative pubblicate"}
                 </p>
                 {user && (
-                  <button 
+                  <button
                     onClick={() => navigate('/supporto')}
                     className="text-primary hover:underline"
                   >

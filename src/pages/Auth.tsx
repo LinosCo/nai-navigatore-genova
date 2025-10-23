@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
 import { Shield, Mail, User, AlertCircle, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
@@ -19,6 +20,8 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [isSpidCallback, setIsSpidCallback] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -126,7 +129,7 @@ const Auth = () => {
 
   const handleEmailSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email || !password) {
       setMessage("Email e password sono obbligatori");
       return;
@@ -164,6 +167,36 @@ const Auth = () => {
       console.error("Signup error:", error);
       setMessage(error.message || "Errore durante la registrazione");
       toast.error("Errore durante la registrazione");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePasswordReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!resetEmail) {
+      toast.error("Inserisci la tua email");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      toast.success("Email di recupero inviata! Controlla la tua casella di posta.");
+      setShowForgotPassword(false);
+      setResetEmail("");
+    } catch (error: any) {
+      console.error("Password reset error:", error);
+      toast.error("Errore durante l'invio dell'email di recupero");
     } finally {
       setLoading(false);
     }
@@ -271,9 +304,18 @@ const Auth = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label htmlFor="password" className="text-sm font-medium">
-                        Password
-                      </label>
+                      <div className="flex items-center justify-between">
+                        <label htmlFor="password" className="text-sm font-medium">
+                          Password
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setShowForgotPassword(true)}
+                          className="text-xs text-primary hover:underline"
+                        >
+                          Password dimenticata?
+                        </button>
+                      </div>
                       <Input
                         id="password"
                         type="password"
@@ -343,6 +385,46 @@ const Auth = () => {
         </div>
       </main>
       <Footer />
+
+      {/* Password Recovery Dialog */}
+      <Dialog open={showForgotPassword} onOpenChange={setShowForgotPassword}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Recupera Password</DialogTitle>
+            <DialogDescription>
+              Inserisci il tuo indirizzo email e ti invieremo un link per reimpostare la password.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handlePasswordReset} className="space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="reset-email" className="text-sm font-medium">
+                Email
+              </label>
+              <Input
+                id="reset-email"
+                type="email"
+                placeholder="la-tua-email@esempio.it"
+                value={resetEmail}
+                onChange={(e) => setResetEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1"
+                onClick={() => setShowForgotPassword(false)}
+              >
+                Annulla
+              </Button>
+              <Button type="submit" className="flex-1" disabled={loading}>
+                {loading ? "Invio..." : "Invia Link"}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

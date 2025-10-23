@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
+import { SkipLinks } from "@/components/SkipLinks";
 import Index from "./pages/Index";
 import Activities from "./pages/Activities";
 import Calendar from "./pages/Calendar";
@@ -11,6 +12,9 @@ import Map from "./pages/Map";
 import Support from "./pages/Support";
 import GeneratoreAttivita from "./pages/GeneratoreAttivita";
 import Auth from "./pages/Auth";
+import ResetPassword from "./pages/ResetPassword";
+import UserProfile from "./pages/UserProfile";
+import TeacherDashboard from "./pages/TeacherDashboard";
 import AdminSettings from "./pages/AdminSettings";
 import NotificationSettings from "./pages/NotificationSettings";
 import NotFound from "./pages/NotFound";
@@ -24,6 +28,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <SkipLinks />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/attivita" element={<Activities />} />
@@ -32,6 +37,9 @@ const App = () => (
             <Route path="/supporto" element={<Support />} />
             <Route path="/generatore" element={<GeneratoreAttivita />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/profilo" element={<UserProfile />} />
+            <Route path="/dashboard-docenti" element={<TeacherDashboard />} />
             <Route path="/admin" element={<AdminSettings />} />
             <Route path="/impostazioni-notifiche" element={<NotificationSettings />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

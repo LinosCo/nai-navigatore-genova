@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import accessibility styles */
+@import './styles/accessibility.css';
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */
@@ -176,5 +179,25 @@ All colors MUST be HSL.
 
   .text-caption {
     @apply text-xs font-medium;
+  }
+
+  /* RTL Support for Arabic */
+  [dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+  }
+
+  [dir="rtl"] .text-left {
+    text-align: right;
+  }
+
+  [dir="rtl"] .text-right {
+    text-align: left;
+  }
+
+  /* Arabic font support */
+  .font-arabic {
+    font-family: 'Segoe UI', 'Arial', 'Tahoma', sans-serif;
+    font-weight: 400;
   }
 }

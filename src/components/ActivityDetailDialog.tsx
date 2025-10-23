@@ -10,6 +10,9 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Pencil, Save, X } from "lucide-react";
+import AddToCalendarButton from "@/components/AddToCalendarButton";
+import ReviewsSection from "@/components/ReviewsSection";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Activity {
   id: string;
@@ -338,6 +341,22 @@ const ActivityDetailDialog = ({ activity, open, onOpenChange, onActivityUpdate }
             )}
           </div>
         </div>
+
+        {/* Calendar Integration - Always show when not editing */}
+        {!isEditing && activity && (
+          <div className="mt-6 pt-4 border-t">
+            <AddToCalendarButton
+              title={activity.title}
+              description={`${activity.description}\n\nOrganizzazione: ${activity.organization}\nContatto: ${activity.contact}`}
+              location={activity.location}
+              startDate={activity.date}
+              endDate={activity.end_date}
+              url={activity.source_url}
+              variant="default"
+              size="default"
+            />
+          </div>
+        )}
 
         {isEditing && (
           <DialogFooter>
