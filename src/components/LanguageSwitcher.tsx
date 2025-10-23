@@ -13,30 +13,14 @@ import { useEffect } from 'react';
 export function LanguageSwitcher() {
   const { i18n } = useTranslation();
 
-  // Apply RTL direction for Arabic
+  // Update document language
   useEffect(() => {
-    // Normalizza il codice lingua (es. 'it-IT' -> 'it')
     const normalizedLang = i18n.language.split('-')[0];
-
-    const currentLang = supportedLanguages.find(
-      (lang) => lang.code === normalizedLang
-    );
-
-    if (currentLang?.dir === 'rtl') {
-      document.documentElement.dir = 'rtl';
-      document.documentElement.lang = currentLang.code;
-    } else {
-      document.documentElement.dir = 'ltr';
-      document.documentElement.lang = normalizedLang;
-    }
+    document.documentElement.lang = normalizedLang;
   }, [i18n.language]);
 
-  const changeLanguage = async (langCode: SupportedLanguage) => {
-    try {
-      await i18n.changeLanguage(langCode);
-    } catch (error) {
-      console.error('Error changing language:', error);
-    }
+  const changeLanguage = (langCode: SupportedLanguage) => {
+    i18n.changeLanguage(langCode);
   };
 
   // Normalizza per trovare la lingua corrente
@@ -66,9 +50,7 @@ export function LanguageSwitcher() {
             }`}
           >
             <span className="mr-2 text-lg">{lang.flag}</span>
-            <span className={lang.dir === 'rtl' ? 'font-arabic' : ''}>
-              {lang.name}
-            </span>
+            <span>{lang.name}</span>
             {normalizedCurrentLang === lang.code && (
               <span className="ml-auto text-primary">✓</span>
             )}

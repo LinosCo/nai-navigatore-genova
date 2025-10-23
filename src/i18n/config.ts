@@ -4,23 +4,17 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 
 import it from './locales/it.json';
 import en from './locales/en.json';
-import fr from './locales/fr.json';
-import ar from './locales/ar.json';
 
-// Language resources
+// Language resources - SOLO ITALIANO E INGLESE
 const resources = {
   it: { translation: it },
   en: { translation: en },
-  fr: { translation: fr },
-  ar: { translation: ar },
 };
 
-// Supported languages
+// Supported languages - SOLO ITALIANO E INGLESE
 export const supportedLanguages = [
   { code: 'it', name: 'Italiano', flag: '🇮🇹' },
   { code: 'en', name: 'English', flag: '🇬🇧' },
-  { code: 'fr', name: 'Français', flag: '🇫🇷' },
-  { code: 'ar', name: 'العربية', flag: '🇸🇦', dir: 'rtl' },
 ] as const;
 
 export type SupportedLanguage = typeof supportedLanguages[number]['code'];
@@ -33,45 +27,31 @@ i18n
   // Initialize i18next
   .init({
     resources,
-    fallbackLng: 'it', // Default language
-    supportedLngs: ['it', 'en', 'fr', 'ar'],
-
-    // Imposta lingua default per evitare "civet" bug
+    fallbackLng: 'it',
+    supportedLngs: ['it', 'en'],
     lng: 'it',
 
-    // Non fallback a sviluppo chiavi
-    returnEmptyString: false,
-    returnNull: false,
-
-    // Debug solo in development
-    debug: false,
-
-    // Language detection options
+    // Language detection
     detection: {
-      // Order of detection methods
-      order: ['localStorage', 'navigator', 'htmlTag'],
-      // Cache user language
+      order: ['localStorage', 'navigator'],
       caches: ['localStorage'],
-      // Local storage key
       lookupLocalStorage: 'neip-language',
-      // Convert language codes (en-US -> en)
-      convertDetectedLanguage: (lng) => lng.split('-')[0],
+      convertDetectedLanguage: (lng) => {
+        const normalized = lng.split('-')[0];
+        // Se non è supportato, usa italiano
+        return ['it', 'en'].includes(normalized) ? normalized : 'it';
+      },
     },
 
     interpolation: {
-      escapeValue: false, // React already escapes values
+      escapeValue: false,
     },
 
-    // React i18next options
     react: {
-      useSuspense: false, // Disable suspense for smoother loading
-      // Bind i18n to component
-      bindI18n: 'languageChanged',
-      bindI18nStore: 'added',
+      useSuspense: false,
     },
 
-    // Load strategy
-    load: 'languageOnly', // Load only 'en' instead of 'en-US'
+    load: 'languageOnly',
   });
 
 export default i18n;

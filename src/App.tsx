@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { SkipLinks } from "@/components/SkipLinks";
-import { LanguageDebugInfo } from "@/components/LanguageDebugInfo";
 import Index from "./pages/Index";
 import Activities from "./pages/Activities";
 import Calendar from "./pages/Calendar";
@@ -30,7 +29,6 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <SkipLinks />
-          <LanguageDebugInfo />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/attivita" element={<Activities />} />

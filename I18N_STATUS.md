@@ -1,15 +1,20 @@
 # 🌍 Stato Internazionalizzazione (i18n)
 
-## ✅ Implementato
+## ✅ Implementato (Solo IT + EN)
 
-L'internazionalizzazione è stata implementata con successo utilizzando `i18next` e `react-i18next`.
+L'internazionalizzazione è stata implementata utilizzando `i18next` e `react-i18next`.
+
+**IMPORTANTE**: Supporto limitato a **SOLO 2 LINGUE** per garantire stabilità.
 
 ### Lingue Supportate
 
 - 🇮🇹 **Italiano** (default) - Completo
-- 🇬🇧 **Inglese** - Traduzioni parziali
-- 🇫🇷 **Francese** - Traduzioni parziali
-- 🇸🇦 **Arabo** - Traduzioni parziali + supporto RTL
+- 🇬🇧 **Inglese** - Completo
+
+### Lingue Rimosse
+
+- ❌ **Francese** - Rimosso per semplificazione
+- ❌ **Arabo** - Rimosso (causava problemi layout RTL)
 
 ### Componenti Tradotti
 
@@ -131,18 +136,15 @@ Se vedi testo tipo `nav.home` invece di "Home", significa:
 1. La chiave di traduzione non esiste nel file lingua attuale
 2. Soluzione: Aggiungi la traduzione nei file `locales/*.json`
 
-### "L'arabo non inverte il layout"
+### "Solo 2 lingue? Voglio aggiungerne altre"
 
-Il layout RTL per arabo è configurato ma potrebbe non funzionare su tutti i componenti.
+**Non consigliato.** Il supporto multilingua completo richiede:
+1. Traduzioni complete di tutti i testi UI
+2. Testing approfondito per ogni lingua
+3. Gestione layout RTL per lingue come arabo/ebraico
+4. Manutenzione continua delle traduzioni
 
-Fix CSS per un componente specifico:
-
-```css
-[dir="rtl"] .my-component {
-  text-align: right;
-  direction: rtl;
-}
-```
+Per ora, IT + EN copre il 90% degli utenti target.
 
 ## 🚀 Prossimi Passi
 
@@ -168,17 +170,16 @@ Per completare l'internazionalizzazione:
 
 ## 📊 Coverage Attuale
 
-| Componente | IT | EN | FR | AR |
-|------------|----|----|----|----|
-| Navigation | ✅ | ✅ | ✅ | ✅ |
-| Auth | ❌ | ❌ | ❌ | ❌ |
-| Profile | ❌ | ❌ | ❌ | ❌ |
-| Dashboard | ❌ | ❌ | ❌ | ❌ |
-| Search | ❌ | ❌ | ❌ | ❌ |
-| Calendar | ❌ | ❌ | ❌ | ❌ |
-| Reviews | ❌ | ❌ | ❌ | ❌ |
+| Componente | IT | EN |
+|------------|----|----|
+| Navigation | ✅ | ✅ |
+| Menu Utente | ✅ | ✅ |
+| Login/Logout | ✅ | ✅ |
+| Contenuti DB | 📝 | 📝 |
 
-**Nota**: ❌ = Hardcoded in italiano (funziona, ma non tradotto)
+**Legenda**:
+- ✅ = Completamente tradotto
+- 📝 = Solo in italiano (contenuti da database, non UI)
 
 ## 🔥 Test Rapido
 
@@ -186,26 +187,25 @@ Per testare che l'i18n funzioni:
 
 1. Avvia dev server: `npm run dev`
 2. Apri http://localhost:8080
-3. Guarda box debug in basso a destra (deve mostrare `it`)
-4. Clicca icona globo 🌐 nella navigation
-5. Seleziona "English"
-6. Il menu navigation deve tradursi in inglese
-7. Box debug deve mostrare `en`
-8. Ricarica pagina → Deve rimanere in inglese (localStorage)
+3. Clicca icona globo 🌐 nella navigation (in alto a destra)
+4. Seleziona "English 🇬🇧"
+5. Il menu navigation deve tradursi immediatamente in inglese
+6. I link nel menu utente (Profile, Logout, ecc.) devono essere in inglese
+7. Ricarica pagina (F5) → Deve rimanere in inglese (salvato in localStorage)
 
 ## 💡 Tips
 
 ### Per Development
 
-- **Debug Box**: Mostra sempre stato i18n attuale
-- **Hot Reload**: Le modifiche ai file `.json` si vedono immediatamente
-- **Console Warnings**: Se vedi warning per chiavi mancanti, aggiungile
+- **Hot Reload**: Le modifiche ai file `.json` si vedono immediatamente con save
+- **Console Browser**: Controlla F12 → Console per eventuali errori i18n
+- **localStorage**: Pulisci con `localStorage.clear()` per reset lingua
 
 ### Per Production
 
-- Il Debug Box è automaticamente nascosto
-- Le traduzioni sono bundle nel JavaScript (no richieste HTTP extra)
-- La scelta lingua è persistente (localStorage)
+- Le traduzioni sono incluse nel bundle JavaScript (no richieste HTTP extra)
+- La scelta lingua è persistente (salvata in localStorage come `neip-language`)
+- Solo 2 lingue = bundle size ottimizzato
 
 ## 📚 Documentazione
 
@@ -216,5 +216,6 @@ Per testare che l'i18n funzioni:
 
 ---
 
-**Status**: ✅ Funzionante con limitazioni documentate
+**Status**: ✅ Semplificato e funzionante (solo IT + EN)
 **Ultima revisione**: 23 Ottobre 2025
+**Versione**: 2.0 (Stabile)
