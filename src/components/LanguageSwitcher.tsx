@@ -15,8 +15,11 @@ export function LanguageSwitcher() {
 
   // Apply RTL direction for Arabic
   useEffect(() => {
+    // Normalizza il codice lingua (es. 'it-IT' -> 'it')
+    const normalizedLang = i18n.language.split('-')[0];
+
     const currentLang = supportedLanguages.find(
-      (lang) => lang.code === i18n.language
+      (lang) => lang.code === normalizedLang
     );
 
     if (currentLang?.dir === 'rtl') {
@@ -24,16 +27,22 @@ export function LanguageSwitcher() {
       document.documentElement.lang = currentLang.code;
     } else {
       document.documentElement.dir = 'ltr';
-      document.documentElement.lang = i18n.language;
+      document.documentElement.lang = normalizedLang;
     }
   }, [i18n.language]);
 
-  const changeLanguage = (langCode: SupportedLanguage) => {
-    i18n.changeLanguage(langCode);
+  const changeLanguage = async (langCode: SupportedLanguage) => {
+    try {
+      await i18n.changeLanguage(langCode);
+    } catch (error) {
+      console.error('Error changing language:', error);
+    }
   };
 
+  // Normalizza per trovare la lingua corrente
+  const normalizedCurrentLang = i18n.language.split('-')[0];
   const currentLanguage = supportedLanguages.find(
-    (lang) => lang.code === i18n.language
+    (lang) => lang.code === normalizedCurrentLang
   ) || supportedLanguages[0];
 
   return (
@@ -53,14 +62,14 @@ export function LanguageSwitcher() {
             key={lang.code}
             onClick={() => changeLanguage(lang.code)}
             className={`cursor-pointer ${
-              i18n.language === lang.code ? 'bg-accent' : ''
+              normalizedCurrentLang === lang.code ? 'bg-accent' : ''
             }`}
           >
             <span className="mr-2 text-lg">{lang.flag}</span>
             <span className={lang.dir === 'rtl' ? 'font-arabic' : ''}>
               {lang.name}
             </span>
-            {i18n.language === lang.code && (
+            {normalizedCurrentLang === lang.code && (
               <span className="ml-auto text-primary">✓</span>
             )}
           </DropdownMenuItem>

@@ -36,6 +36,16 @@ i18n
     fallbackLng: 'it', // Default language
     supportedLngs: ['it', 'en', 'fr', 'ar'],
 
+    // Imposta lingua default per evitare "civet" bug
+    lng: 'it',
+
+    // Non fallback a sviluppo chiavi
+    returnEmptyString: false,
+    returnNull: false,
+
+    // Debug solo in development
+    debug: false,
+
     // Language detection options
     detection: {
       // Order of detection methods
@@ -44,6 +54,8 @@ i18n
       caches: ['localStorage'],
       // Local storage key
       lookupLocalStorage: 'neip-language',
+      // Convert language codes (en-US -> en)
+      convertDetectedLanguage: (lng) => lng.split('-')[0],
     },
 
     interpolation: {
@@ -53,7 +65,13 @@ i18n
     // React i18next options
     react: {
       useSuspense: false, // Disable suspense for smoother loading
+      // Bind i18n to component
+      bindI18n: 'languageChanged',
+      bindI18nStore: 'added',
     },
+
+    // Load strategy
+    load: 'languageOnly', // Load only 'en' instead of 'en-US'
   });
 
 export default i18n;
