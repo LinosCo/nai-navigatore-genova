@@ -4,7 +4,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
-import { SkipLinks } from "@/components/SkipLinks";
 import Index from "./pages/Index";
 import Activities from "./pages/Activities";
 import Calendar from "./pages/Calendar";
@@ -28,7 +27,6 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <SkipLinks />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/attivita" element={<Activities />} />

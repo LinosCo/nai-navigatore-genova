@@ -6,8 +6,6 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
 import { NotificationsPanel } from "@/components/NotificationsPanel";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { useTranslation } from "react-i18next";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +17,6 @@ import {
 const Navigation = () => {
   const { user, signOut } = useAuth();
   const { isAdmin } = useUserRole();
-  const { t } = useTranslation();
 
   const navItems = [
     {
@@ -112,7 +109,6 @@ const Navigation = () => {
 
           {/* User Actions */}
           <div className="flex items-center space-x-3">
-            <LanguageSwitcher />
             {user && <NotificationsPanel />}
 
             {user ? (
@@ -140,19 +136,19 @@ const Navigation = () => {
                     <DropdownMenuItem className="flex items-center" asChild>
                       <NavLink to="/profilo">
                         <User className="mr-2 h-4 w-4" />
-                        <span>{t('nav.profile')}</span>
+                        <span>Profilo</span>
                       </NavLink>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="flex items-center" asChild>
                       <NavLink to="/dashboard-docenti">
                         <GraduationCap className="mr-2 h-4 w-4" />
-                        <span>{t('nav.teacherDashboard')}</span>
+                        <span>Dashboard Docenti</span>
                       </NavLink>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="flex items-center" asChild>
                       <NavLink to="/impostazioni-notifiche">
                         <Settings className="mr-2 h-4 w-4" />
-                        <span>{t('nav.settings')}</span>
+                        <span>Impostazioni</span>
                       </NavLink>
                     </DropdownMenuItem>
                     {isAdmin && (
@@ -172,14 +168,14 @@ const Navigation = () => {
                       onClick={signOut}
                     >
                       <LogOut className="mr-2 h-4 w-4" />
-                      <span>{t('nav.logout')}</span>
+                      <span>Esci</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
             ) : (
               <Button asChild variant="default" size="sm">
-                <NavLink to="/auth">{t('nav.login')}</NavLink>
+                <NavLink to="/auth">Accedi</NavLink>
               </Button>
             )}
           </div>

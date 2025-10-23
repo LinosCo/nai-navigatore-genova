@@ -230,16 +230,16 @@ const ActivityCard = ({
       </CardContent>
 
       <CardFooter className="pt-0 space-y-2">
-        <Button 
-          variant="outline" 
-          size="sm" 
+        <Button
+          variant="outline"
+          size="sm"
           onClick={handleContact}
           className="text-xs w-full"
         >
           <Phone className="h-3 w-3 mr-1" />
           Contatta
         </Button>
-        
+
         <Button variant="ghost" size="sm" className="w-full text-xs">
           <ExternalLink className="h-3 w-3 mr-1" />
           Maggiori informazioni

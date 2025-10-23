@@ -135,7 +135,7 @@ const SearchSection = ({ onSearch }: SearchSectionProps) => {
               Tutte le iniziative per studenti NAI
             </h1>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Scopri corsi di lingua, attività culturali, servizi sociali e opportunità sportive 
+              Scopri corsi di lingua, attività culturali, servizi sociali e opportunità sportive
               nella città di Genova per studenti Neo Arrivati in Italia
             </p>
           </div>
