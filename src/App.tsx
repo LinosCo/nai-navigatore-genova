@@ -16,6 +16,7 @@ import UserProfile from "./pages/UserProfile";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import AdminSettings from "./pages/AdminSettings";
 import NotificationSettings from "./pages/NotificationSettings";
+import GuidaUtente from "./pages/GuidaUtente";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/dashboard-docenti" element={<TeacherDashboard />} />
             <Route path="/admin" element={<AdminSettings />} />
             <Route path="/impostazioni-notifiche" element={<NotificationSettings />} />
+            <Route path="/guida" element={<GuidaUtente />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
