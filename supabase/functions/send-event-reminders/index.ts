@@ -4,6 +4,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
+const APP_URL = Deno.env.get('APP_URL') || 'https://neiptest.linos.co'; // URL dell'applicazione frontend
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
@@ -71,7 +72,7 @@ async function sendReminderEmail(email: string, firstName: string, initiative: a
           </div>
 
           <p style="text-align: center;">
-            <a href="${SUPABASE_URL.replace('supabase.co', 'vercel.app')}/calendario" class="button">
+            <a href="${APP_URL}/calendario" class="button">
               Vedi Dettagli Completi
             </a>
           </p>
@@ -83,7 +84,7 @@ async function sendReminderEmail(email: string, firstName: string, initiative: a
         </div>
         <div class="footer">
           <p>Questa email è stata inviata automaticamente da NEIP Platform.</p>
-          <p><a href="${SUPABASE_URL.replace('supabase.co', 'vercel.app')}/impostazioni-notifiche">Gestisci preferenze email</a></p>
+          <p><a href="${APP_URL}/impostazioni-notifiche">Gestisci preferenze email</a></p>
         </div>
       </div>
     </body>

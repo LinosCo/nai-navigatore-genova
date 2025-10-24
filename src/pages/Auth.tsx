@@ -13,6 +13,7 @@ import { Shield, Mail, User, AlertCircle, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { getAppUrl } from "@/lib/config";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -42,11 +43,11 @@ const Auth = () => {
   const handleSpidCallback = async (samlResponse: string) => {
     try {
       setLoading(true);
-      
+
       const { data, error } = await supabase.functions.invoke('spid-auth', {
         body: {
           spidAssertion: samlResponse,
-          returnUrl: window.location.origin
+          returnUrl: getAppUrl()
         }
       });
 
@@ -71,7 +72,7 @@ const Auth = () => {
     try {
       setLoading(true);
       // Redirect to SPID authentication page
-      const spidUrl = buildSpidAuthUrl(window.location.origin);
+      const spidUrl = buildSpidAuthUrl(getAppUrl());
       window.location.href = spidUrl;
     } catch (error: any) {
       setMessage("Errore durante l'accesso SPID: " + error.message);
@@ -143,7 +144,7 @@ const Auth = () => {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/`
+          emailRedirectTo: `${getAppUrl()}/`
         }
       });
 
@@ -184,7 +185,7 @@ const Auth = () => {
 
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-        redirectTo: `${window.location.origin}/reset-password`,
+        redirectTo: `${getAppUrl()}/reset-password`,
       });
 
       if (error) {

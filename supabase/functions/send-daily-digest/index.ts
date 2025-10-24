@@ -4,6 +4,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY'); // Optional: use Resend for better email delivery
+const APP_URL = Deno.env.get('APP_URL') || 'https://neiptest.linos.co'; // URL dell'applicazione frontend
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
@@ -50,7 +51,7 @@ async function sendDigestEmail(data: DigestData) {
           <div class="section">
             <h3>🔔 Notifiche Non Lette</h3>
             <p>Hai <strong>${unreadNotifications}</strong> notifiche non lette.</p>
-            <a href="${SUPABASE_URL.replace('supabase.co', 'vercel.app')}/notifiche" class="button">
+            <a href="${APP_URL}/notifiche" class="button">
               Visualizza Notifiche
             </a>
           </div>
@@ -66,7 +67,7 @@ async function sendDigestEmail(data: DigestData) {
                 <p><small>📍 ${init.location || 'Online'} | 📅 ${new Date(init.start_date).toLocaleDateString('it-IT')}</small></p>
               </div>
             `).join('')}
-            <a href="${SUPABASE_URL.replace('supabase.co', 'vercel.app')}/" class="button">
+            <a href="${APP_URL}/" class="button">
               Esplora Tutte
             </a>
           </div>
@@ -86,7 +87,7 @@ async function sendDigestEmail(data: DigestData) {
                 <p>📍 ${event.location || 'Online'}</p>
               </div>
             `).join('')}
-            <a href="${SUPABASE_URL.replace('supabase.co', 'vercel.app')}/calendario" class="button">
+            <a href="${APP_URL}/calendario" class="button">
               Vedi Calendario
             </a>
           </div>
@@ -101,7 +102,7 @@ async function sendDigestEmail(data: DigestData) {
         </div>
         <div class="footer">
           <p>Questa email è stata inviata automaticamente da NEIP Platform.</p>
-          <p><a href="${SUPABASE_URL.replace('supabase.co', 'vercel.app')}/impostazioni-notifiche">Gestisci preferenze email</a></p>
+          <p><a href="${APP_URL}/impostazioni-notifiche">Gestisci preferenze email</a></p>
         </div>
       </div>
     </body>
