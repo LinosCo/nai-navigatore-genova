@@ -34,6 +34,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Verifica se siamo in modalità password recovery dall'URL
+    const isPasswordRecovery = () => {
+      if (typeof window === 'undefined') return false;
+      const hashParams = new URLSearchParams(window.location.hash.substring(1));
+      const type = hashParams.get('type');
+      return type === 'recovery';
+    };
+
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
@@ -54,11 +62,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     );
 
     // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    // Ma solo se NON siamo in modalità password recovery
+    if (!isPasswordRecovery()) {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
+      });
+    } else {
+      // Se siamo in recovery mode, non caricare la sessione
       setLoading(false);
-    });
+    }
 
     return () => subscription.unsubscribe();
   }, []);
