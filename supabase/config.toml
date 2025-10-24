@@ -2,15 +2,15 @@ project_id = "aksvtewwjusdmfylallx"
 
 [auth]
 # URL del sito principale
-site_url = "https://neiptest.linos.co"
+site_url = "https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app"
 
 # URL di redirect autorizzati (separati da virgola)
 # Includono sia produzione che locale per testing
 additional_redirect_urls = [
   "http://localhost:5173/reset-password",
   "http://localhost:5173",
-  "https://neiptest.linos.co/reset-password",
-  "https://neiptest.linos.co"
+  "https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app/reset-password",
+  "https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app"
 ]
 
 # Configurazione email

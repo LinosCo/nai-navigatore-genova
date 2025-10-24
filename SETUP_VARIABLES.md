@@ -17,7 +17,7 @@ Per completare la configurazione del reset password con il nuovo URL, devi confi
 5. Aggiungi:
    ```
    Name: VITE_APP_URL
-   Value: https://neiptest.linos.co
+   Value: https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app
    Environments: ✅ Production ✅ Preview ✅ Development
    ```
 6. Clicca **Save**
@@ -40,10 +40,10 @@ vercel link
 
 # Aggiungi la variabile d'ambiente
 vercel env add VITE_APP_URL production
-# Quando richiesto, inserisci: https://neiptest.linos.co
+# Quando richiesto, inserisci: https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app
 
 vercel env add VITE_APP_URL preview
-# Quando richiesto, inserisci: https://neiptest.linos.co
+# Quando richiesto, inserisci: https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app
 
 # Redeploy
 vercel --prod
@@ -63,7 +63,7 @@ vercel --prod
 6. Aggiungi:
    ```
    Name: APP_URL
-   Value: https://neiptest.linos.co
+   Value: https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app
    ```
 7. Clicca **Save**
 8. Le Edge Functions useranno automaticamente il nuovo valore
@@ -75,7 +75,7 @@ vercel --prod
 npx supabase login
 
 # Aggiungi il secret
-npx supabase secrets set APP_URL=https://neiptest.linos.co --project-ref aksvtewwjusdmfylallx
+npx supabase secrets set APP_URL=https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app --project-ref aksvtewwjusdmfylallx
 
 # Verifica
 npx supabase secrets list --project-ref aksvtewwjusdmfylallx
@@ -87,13 +87,13 @@ npx supabase secrets list --project-ref aksvtewwjusdmfylallx
 
 Dopo aver configurato entrambe le variabili e fatto redeploy:
 
-1. Vai su https://neiptest.linos.co/auth
+1. Vai su https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app/auth
 2. Clicca "Password dimenticata?"
 3. Inserisci la tua email
 4. Controlla l'email ricevuta
-5. Il link dovrebbe essere: `https://neiptest.linos.co/reset-password?...`
+5. Il link dovrebbe essere: `https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app/reset-password?...`
    - ❌ NON più: `https://nai-navigatore-genova-xxx.vercel.app/reset-password`
-   - ✅ Deve essere: `https://neiptest.linos.co/reset-password`
+   - ✅ Deve essere: `https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app/reset-password`
 
 ---
 

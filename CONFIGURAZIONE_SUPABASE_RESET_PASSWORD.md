@@ -23,10 +23,10 @@ La configurazione è gestita automaticamente tramite il file `supabase/config.to
 ### File Configurato: `supabase/config.toml`
 
 Il file contiene:
-- **Site URL**: `https://neiptest.linos.co` (URL principale di produzione)
+- **Site URL**: `https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app` (URL principale di produzione)
 - **Additional Redirect URLs**:
   - `http://localhost:5173` e `http://localhost:5173/reset-password` (sviluppo locale)
-  - `https://neiptest.linos.co` e `https://neiptest.linos.co/reset-password` (produzione)
+  - `https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app` e `https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app/reset-password` (produzione)
 - **Configurazione Email**: Abilitata conferma email e doppia conferma per i cambiamenti
 
 ### Deployment

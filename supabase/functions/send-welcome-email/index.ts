@@ -30,7 +30,7 @@ const handler = async (req: Request): Promise<Response> => {
     const html = await renderAsync(
       React.createElement(WelcomeEmail, {
         name,
-        appUrl: 'https://neiptest.linos.co',
+        appUrl: 'https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app',
       })
     );
 

@@ -4,7 +4,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY'); // Optional: use Resend for better email delivery
-const APP_URL = Deno.env.get('APP_URL') || 'https://neiptest.linos.co'; // URL dell'applicazione frontend
+const APP_URL = Deno.env.get('APP_URL') || 'https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app'; // URL dell'applicazione frontend
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 

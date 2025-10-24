@@ -16,7 +16,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # Variabili
-APP_URL="https://neiptest.linos.co"
+APP_URL="https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app"
 SUPABASE_PROJECT_REF="aksvtewwjusdmfylallx"
 
 echo -e "${YELLOW}📋 Variabili da configurare:${NC}"

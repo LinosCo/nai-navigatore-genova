@@ -44,7 +44,7 @@ Lo script farà:
 3. **Project Settings** → **Edge Functions** → **Manage secrets**
 4. Aggiungi secret:
    - Name: `APP_URL`
-   - Value: `https://neiptest.linos.co`
+   - Value: `https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app`
 5. Salva
 
 #### B) Vercel
@@ -54,7 +54,7 @@ Lo script farà:
 3. **Settings** → **Environment Variables**
 4. Aggiungi variabile:
    - Name: `VITE_APP_URL`
-   - Value: `https://neiptest.linos.co`
+   - Value: `https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app`
    - Environments: ✅ Production ✅ Preview ✅ Development
 5. Salva
 6. **Deployments** → Redeploy l'ultimo deployment
@@ -66,14 +66,14 @@ Lo script farà:
 ```bash
 # Supabase
 npx supabase login
-npx supabase secrets set APP_URL=https://neiptest.linos.co --project-ref aksvtewwjusdmfylallx
+npx supabase secrets set APP_URL=https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app --project-ref aksvtewwjusdmfylallx
 
 # Vercel (installa prima: npm i -g vercel)
 vercel login
 cd /Users/alessandroborsato/Desktop/nai-navigatore-genova-main
 vercel link
-echo "https://neiptest.linos.co" | vercel env add VITE_APP_URL production
-echo "https://neiptest.linos.co" | vercel env add VITE_APP_URL preview
+echo "https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app" | vercel env add VITE_APP_URL production
+echo "https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app" | vercel env add VITE_APP_URL preview
 vercel --prod
 ```
 
@@ -83,13 +83,13 @@ vercel --prod
 
 Dopo aver configurato le variabili:
 
-1. Vai su **https://neiptest.linos.co/auth**
+1. Vai su **https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app/auth**
 2. Clicca **"Password dimenticata?"**
 3. Inserisci email
 4. Ricevi email con link
-5. **Il link DEVE essere**: `https://neiptest.linos.co/reset-password?...`
+5. **Il link DEVE essere**: `https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app/reset-password?...`
    - ❌ **NON**: `https://nai-navigatore-genova-xxx.vercel.app/...`
-   - ✅ **OK**: `https://neiptest.linos.co/reset-password...`
+   - ✅ **OK**: `https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app/reset-password...`
 6. Clicca sul link
 7. Inserisci nuova password
 8. Vieni reindirizzato al login
@@ -166,7 +166,7 @@ vercel env ls
    ↓
 2. Inserisce email
    ↓
-3. Riceve email con link a https://neiptest.linos.co/reset-password
+3. Riceve email con link a https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app/reset-password
    ↓
 4. Clicca link → arriva a pagina reset (NON login automatico)
    ↓
@@ -192,8 +192,8 @@ La via più veloce:
 ./setup-env.sh
 
 # Oppure configura manualmente le 2 variabili:
-# 1. VITE_APP_URL su Vercel → https://neiptest.linos.co
-# 2. APP_URL su Supabase → https://neiptest.linos.co
+# 1. VITE_APP_URL su Vercel → https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app
+# 2. APP_URL su Supabase → https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app
 
 # Poi redeploy e testa!
 ```
