@@ -21,9 +21,15 @@ const ResetPassword = () => {
     const accessToken = hashParams.get('access_token');
     const type = hashParams.get('type');
 
+    console.log('Reset password params:', { accessToken: !!accessToken, type });
+
+    // Se non ci sono i parametri necessari, reindirizza al login dopo un breve delay
     if (!accessToken || type !== 'recovery') {
-      toast.error("Link non valido o scaduto");
-      navigate("/auth");
+      const timer = setTimeout(() => {
+        toast.error("Link non valido o scaduto");
+        navigate("/auth");
+      }, 1000);
+      return () => clearTimeout(timer);
     }
   }, [navigate]);
 
@@ -51,8 +57,13 @@ const ResetPassword = () => {
         throw error;
       }
 
-      toast.success("Password reimpostata con successo!");
-      navigate("/");
+      toast.success("Password reimpostata con successo! Ora puoi effettuare il login.");
+
+      // Effettua logout per assicurarsi che l'utente faccia login con la nuova password
+      await supabase.auth.signOut();
+
+      // Reindirizza al login
+      navigate("/auth");
     } catch (error: any) {
       console.error("Password reset error:", error);
       toast.error("Errore durante il reset della password");

@@ -1,1 +1,28 @@
 project_id = "aksvtewwjusdmfylallx"
+
+[auth]
+# URL del sito principale
+site_url = "https://neiptest.linos.co"
+
+# URL di redirect autorizzati (separati da virgola)
+# Includono sia produzione che locale per testing
+additional_redirect_urls = [
+  "http://localhost:5173/reset-password",
+  "http://localhost:5173",
+  "https://neiptest.linos.co/reset-password",
+  "https://neiptest.linos.co"
+]
+
+# Configurazione email
+[auth.email]
+# Abilita conferma email
+enable_signup = true
+# Richiedi conferma email per registrazione
+double_confirm_changes = true
+# Template di recupero password
+enable_confirmations = true
+
+# Configurazione per il reset password
+[auth.email.template.recovery]
+subject = "Recupera la tua password - NEIP"
+content_path = "./supabase/functions/send-welcome-email/_templates/reset-password.tsx"
