@@ -14,7 +14,13 @@ export const getAppUrl = (): string => {
     return import.meta.env.VITE_APP_URL;
   }
 
-  // In sviluppo, usa l'origin corrente
+  // HARDCODED URL PER VERCEL (temporaneo finché non si configura la variabile d'ambiente)
+  // Se siamo in produzione (non localhost), usa l'URL Vercel
+  if (typeof window !== 'undefined' && !window.location.origin.includes('localhost')) {
+    return 'https://nai-navigatore-genova-8vw3-jn86ykaff-linoscos-projects.vercel.app';
+  }
+
+  // In sviluppo locale, usa l'origin corrente
   if (typeof window !== 'undefined') {
     return window.location.origin;
   }
